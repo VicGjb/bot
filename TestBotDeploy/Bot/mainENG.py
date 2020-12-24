@@ -374,10 +374,9 @@ def get_call(call):
 def get_text(message):
     if message.text=='🍴Menu🍴' or message.text=='🍴Вернуться🍴':# может пригодиться
         client.send_message(message.chat.id,"We're happy to offer you this cocktails:", reply_markup= cocktailkeyboard)
-        init_customer_from_message(message)
+        #init_customer_from_message(message)
     elif message.text == '🛍Card🛍':
-        try:
-                
+        try:  
             if len(users[message.chat.id].rows)==0:
                 client.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
             else: 
@@ -390,15 +389,16 @@ def get_text(message):
                 bas_url=users[message.chat.id].rows[item]['url']
                 name= users[message.chat.id].rows[item]['name']
                 text=f'*{name}*[_]({bas_url})' 
-                item_price=users[call.message.chat.id].rows[item]['price']/count_items
+                item_price=users[message.chat.id].rows[item]['price']/count_items
                 total_item = count_items*item_price
                 basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
+                client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
         except AttributeError:
             client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")   
-        except NameError:
-            client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")   
-        except KeyError:
-            client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+        # except NameError:
+        #     client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")   
+        # except KeyError:
+        #     client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
     elif message.text == '💁🏻‍♀️Info💁🏻‍♀️':
         url='https://scontent.fhfa1-1.fna.fbcdn.net/v/t1.0-9/51087951_2681893448493125_7010877500414754816_o.jpg?_nc_cat=107&ccb=2&_nc_sid=174925&_nc_ohc=W5-onSfCwL4AX-gsWKY&_nc_ht=scontent.fhfa1-1.fna&oh=d41c099e79bb84248488f1466a085962&oe=600672E5'
         chris= open('chris.jpg','wb')
@@ -440,6 +440,7 @@ def get_name(message):
                 basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
                 client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
         elif message.text == '⛔️Cancel':
+            client.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
             if len(users[message.chat.id].rows)==0:
                 client.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
             else: 
@@ -449,8 +450,10 @@ def get_name(message):
                 count_items=users[message.chat.id].rows[item]['amount']
                 bas_url=users[message.chat.id].rows[item]['url']
                 name= users[message.chat.id].rows[item]['name']
-                text=f'*{name}*[_]({bas_url})'           
-                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total)
+                text=f'*{name}*[_]({bas_url})' 
+                item_price=users[message.chat.id].rows[item]['price']/count_items
+                total_item = count_items*item_price
+                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
                 client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown') 
         else:
             if message.text == None:
@@ -483,6 +486,7 @@ def get_phone (message):
             client.send_message(message.chat.id, text=f'What is your name?\nNow we know you as: {name[0]}',reply_markup=keyboard_for_order)
             client.register_next_step_handler(message, get_name)
         elif message.text == '⛔️Cancel':
+            client.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
             if len(users[message.chat.id].rows)==0:
                 client.send_message(message.chat.id,"Oops, something is wrong🤭 let's start over, press /start")    
             else: 
@@ -533,7 +537,9 @@ def get_addres(message):
             order.set_style(BeautifulTable.STYLE_COMPACT)
             total=(sum(list(order.columns['Price'])))
             text=f'Your order:\nName:{name[0]}\nPhone:{phone[0]}\nAddress:{addres[0]}\nTotal:{total}'
-            client.send_message(message.chat.id, text=text, reply_markup=last_keyboard)
+            item_price=users[message.chat.id].rows[item]['price']/count_items
+            total_item = count_items*item_price
+            basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
             client.register_next_step_handler(message, send_order)
             
         elif message.text=='⬅️Back':
@@ -541,6 +547,7 @@ def get_addres(message):
             client.send_message(message.chat.id, text=f'Your phone number\nNow: {phone[0]}',reply_markup=keyboard_for_order)
             client.register_next_step_handler(message, get_phone)
         elif message.text == '⛔️Cancel':
+            client.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
             if len(users[message.chat.id].rows)==0:
                 client.send_message(message.chat.id,"Oops, something is wrong🤭 let's start over, press /start")    
             else: 
@@ -551,7 +558,9 @@ def get_addres(message):
                 bas_url=users[message.chat.id].rows[item]['url']
                 name= users[message.chat.id].rows[item]['name']
                 text=f'*{name}*[_]({bas_url})'           
-                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total)
+                item_price=users[message.chat.id].rows[item]['price']/count_items
+                total_item = count_items*item_price
+                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
                 client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown') 
         else:
             if message.text == None:
