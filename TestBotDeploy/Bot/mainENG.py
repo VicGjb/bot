@@ -217,7 +217,6 @@ def welcome (message):
     img = open('out.jpg', 'rb')   
     url='https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/126903084_166685105188559_8109647350154471887_o.jpg?_nc_cat=105&ccb=2&_nc_sid=e3f864&_nc_ohc=d9xEBNdQ7kMAX81gdwG&_nc_ht=scontent.ftlv1-1.fna&oh=5de60ff811edb764f388dfbffed63fad&oe=5FFA7B7B'
     client.send_photo(message.chat.id, img,reply_markup=mainkeyboard)  
-    
     init_customer_from_message(message)
 
 @client.callback_query_handler(func = lambda call:True)
@@ -426,8 +425,9 @@ def get_name(message):
             client.register_next_step_handler(message, get_phone)
         elif message.text=='⬅️Back':
             if len(users[message.chat.id].rows)==0:
-                client.send_message(message.chat.id,"Oops, something is wrong🤭 let's start over, press /start")    
+                client.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
             else: 
+                client.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
                 showitem=f'{n+1}/{len(users[message.chat.id].rows)}'
                 item=users[message.chat.id][n][0]
                 total=sum(list(users[message.chat.id].columns['price']))
@@ -441,7 +441,7 @@ def get_name(message):
                 client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
         elif message.text == '⛔️Cancel':
             if len(users[message.chat.id].rows)==0:
-                client.send_message(message.chat.id,"Oops, something is wrong🤭 let's start over, press /start")    
+                client.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
             else: 
                 showitem=f'{n+1}/{len(users[message.chat.id].rows)}'
                 item=users[message.chat.id][n][0]
