@@ -379,7 +379,7 @@ def get_text(message):
         try:
                 
             if len(users[message.chat.id].rows)==0:
-                client.send_message(message.chat.id,"Oops, something is wrong🤭 let's start over, press /start")    
+                client.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
             else: 
                 global n
                 n=0
