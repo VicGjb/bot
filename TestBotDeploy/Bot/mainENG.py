@@ -28,7 +28,7 @@ for id in key:
     t=id['user_id']
     users.update({t:f'{t}_basket'})
 
-#mainekeyboard
+#maine keyboard reply
 mainkeyboard=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
 menubutton = types.KeyboardButton ('🍴Menu🍴') 
 basketbutton = types.KeyboardButton('🛍Card🛍')
@@ -40,26 +40,26 @@ mainkeyboard.add(menubutton, basketbutton, aboutus, orders)
 #coctailmenu
 cocktailkeyboard=types.InlineKeyboardMarkup(row_width=1)
 cocktail_map=types.InlineKeyboardButton(text='📜Cocktail Card📜', callback_data='cocktail_map')
-sign_type=types.InlineKeyboardButton(text='🍹Signature Cocktails🍹', callback_data='sig')
-classic_type=types.InlineKeyboardButton(text='🍸Classic Coktails🍸',callback_data='clas')
-g_t_type=types.InlineKeyboardButton(text='🍋Gin&Tonic🍋',callback_data='g_t')
-spritzs_type=types.InlineKeyboardButton(text='🍾Aperol Spritz Twists🍊',callback_data='spr')
-negroni_type=types.InlineKeyboardButton(text='🥃Negroni Twists🍊',callback_data='neg')
+sign_type=types.InlineKeyboardButton(text='🍹Signature Cocktails🍹', callback_data='Signature Cocktails')
+classic_type=types.InlineKeyboardButton(text='🍸Classic Coktails🍸',callback_data='Classic Coktails')
+g_t_type=types.InlineKeyboardButton(text='🍋Gin&Tonic🍋',callback_data='Gin&Tonic')
+spritzs_type=types.InlineKeyboardButton(text='🍾Aperol Spritz Twists🍊',callback_data='Aperol Spritz')
+negroni_type=types.InlineKeyboardButton(text='🥃Negroni Twists🍊',callback_data='Negroni')
 cocktailkeyboard.add(cocktail_map, sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
 
-#order keyboard
+#order keyboard reply
 keyboard_for_order =types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2,one_time_keyboard=True) 
 correct = types.KeyboardButton ('✅Correct') 
 back_in_order = types.KeyboardButton('⬅️Back')
 cancel = types.KeyboardButton('⛔️Cancel')
 keyboard_for_order.add(correct,back_in_order,cancel)
 
-#last_keyboard
+#send order keyboard
 last_keyboard=types.ReplyKeyboardMarkup(resize_keyboard=False, row_width=2,one_time_keyboard=True)
 make_order=types.KeyboardButton('✅Send Order')
 last_keyboard.add(make_order, back_in_order)
 
-#keyboard for coctails
+#keyboard for coctails in menu
 def keyboard(price05,price03,cocktail_name):
     trade_keyboard=types.InlineKeyboardMarkup(row_width=2)
     half_litr = types.InlineKeyboardButton (text=f'0.5L\n {price05}NIS', callback_data=f'0.5L {cocktail_name}')
@@ -92,7 +92,7 @@ def basket_test(count_items,showitem,total,item_price,total_item):
     basket_keyboard.add(start_order,back_to_menu)
     return basket_keyboard
 
-
+#show basket from Reply keyboard
 def basket_from_message (n, message):
     showitem=f'{n+1}/{len(users[message.chat.id].rows)}'
     item=users[message.chat.id][n][0]
@@ -105,7 +105,7 @@ def basket_from_message (n, message):
     total_item = count_items*item_price
     basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
     client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
-
+#show basket from inlain keyboard
 def basket_from_call(n, item, call):
     showitem=f'{n+1}/{len(users[call.message.chat.id].rows)}'
     total=sum(list(users[call.message.chat.id].columns['price']))
@@ -119,7 +119,6 @@ def basket_from_call(n, item, call):
     client.send_message(call.message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
 
 def basket_iter(n,call):
-
     item=users[call.message.chat.id][n][0]
     showitem=f'{n+1}/{len(users[call.message.chat.id].rows)}'
     item_price=users[call.message.chat.id].rows[item]['price']
@@ -147,10 +146,8 @@ def init_customer_from_message(message):
             print(id['user_id'])
             t=id['user_id']
             users.update({t:f'{t}_basket'})
-        #print (users)
         users[message.chat.id]=BeautifulTable()
         users[message.chat.id].columns.header=["name", "url", "amount", "price"]
-        #print(users[message.chat.id])
     return users[message.chat.id]
 
 def init_customer_from_call(call):
@@ -164,12 +161,10 @@ def init_customer_from_call(call):
         for id in key:
             t=id['user_id']
             users.update({t:f'{t}_basket'})
-       
         users[call.message.chat.id]=BeautifulTable()
         users[call.message.chat.id].columns.header=["name", "url", "amount", "price"]
-
     return users[call.message.chat.id]
-
+#show cocktails in menu
 def cocktail_type(tip,call):
     if call.data == tip:
 
@@ -190,6 +185,7 @@ def cocktail_type(tip,call):
             trade_keyboard=keyboard(price05,price03,cocktail_name)
             
             client.send_photo(call.message.chat.id, pic, reply_to_message_id="Б",caption=text,reply_markup=trade_keyboard,parse_mode='HTML')
+#show coctails saize for add it in card            
 def cocktail_size(tip,call):
     m=up_cocktail(conn='',tip=tip)
     for cocktail in m:
@@ -253,25 +249,25 @@ def get_call(call):
         client.send_photo(call.message.chat.id, map1,
                             caption="This is our full card, choose from further categories to make an order:",reply_markup=cocktailkeyboard)  
 
-    if call.data =='sig':
-        cocktail_type(tip='sig',call=call)
-    cocktail_size(tip='sig',call=call)
+    if call.data =='Signature Cocktails':
+        cocktail_type(tip='Signature Cocktails',call=call)
+    cocktail_size(tip='Signature Cocktails',call=call)
     
-    if call.data =='clas':
-        cocktail_type(tip='clas',call=call)
-    cocktail_size(tip='clas',call=call)
+    if call.data =='Classic Coktails':
+        cocktail_type(tip='Classic Coktails',call=call)
+    cocktail_size(tip='Classic Coktails',call=call)
     
-    if call.data =='g_t':
-        cocktail_type(tip='g_t',call=call)
-    cocktail_size(tip='g_t',call=call)
+    if call.data =='Gin&Tonic':
+        cocktail_type(tip='Gin&Tonic',call=call)
+    cocktail_size(tip='Gin&Tonic',call=call)
     
-    if call.data =='spr':
-        cocktail_type(tip='spr',call=call)
-    cocktail_size(tip='spr',call=call)
+    if call.data =='Aperol Spritz':
+        cocktail_type(tip='Aperol Spritz',call=call)
+    cocktail_size(tip='Aperol Spritz',call=call)
     
-    if call.data =='neg':
-        cocktail_type(tip='neg',call=call)
-    cocktail_size(tip='neg',call=call)  
+    if call.data =='Negroni':
+        cocktail_type(tip='Negroni',call=call)
+    cocktail_size(tip='Negroni',call=call)  
     #-----------------------Baskect====================================================================================================
     if call.data == 'basket':
         try:
@@ -438,22 +434,21 @@ def get_phone (message):
             if len(users[message.chat.id].rows)==0:
                 client.send_message(message.chat.id,"Oops, something is wrong🤭 let's start over, press /start")    
             else: 
-                
                 basket_from_message(n=n,message=message)
         else:
             if message.text == None:
                # message.text='phone'
                 client.send_message(message.chat.id, text= 'Type your phone number (format 0500000000)')
                 client.register_next_step_handler(message, get_phone)
-            elif message.text.isalpha():
-                #message.text='phone'
-                client.send_message(message.chat.id, text= 'Type your phone number (format 0500000000)')
-                client.register_next_step_handler(message, get_phone)
-            else:
+            elif message.text.isdigit():
                 add_phone(conn='',phone=message.text, user_id=message.chat.id)
                 addres=up_addres(conn='',user_id=message.chat.id)
                 client.send_message(message.chat.id, text=f'Your address:\nNow: {addres[0]}',reply_markup=keyboard_for_order)
-                client.register_next_step_handler(message, get_addres)
+                client.register_next_step_handler(message, get_addres)              
+            else:
+               #message.text='phone'
+                client.send_message(message.chat.id, text= 'Type your phone number (format 0500000000)')
+                client.register_next_step_handler(message, get_phone)
     except AttributeError:
             client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
 def get_addres(message):
