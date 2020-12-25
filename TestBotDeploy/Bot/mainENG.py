@@ -19,8 +19,6 @@ from base import get_ord
 from beautifultable import BeautifulTable
 import psycopg2
  
-#https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/126903084_166685105188559_8109647350154471887_o.jpg?_nc_cat=105&ccb=2&_nc_sid=e3f864&_nc_ohc=d9xEBNdQ7kMAX81gdwG&_nc_ht=scontent.ftlv1-1.fna&oh=5de60ff811edb764f388dfbffed63fad&oe=5FFA7B7B
-
 client=telebot.TeleBot(configure.config['token'])
 global users
 users={}
@@ -94,6 +92,31 @@ def basket_test(count_items,showitem,total,item_price,total_item):
     basket_keyboard.add(start_order,back_to_menu)
     return basket_keyboard
 
+
+def basket_from_message (n, message):
+    showitem=f'{n+1}/{len(users[message.chat.id].rows)}'
+    item=users[message.chat.id][n][0]
+    total=sum(list(users[message.chat.id].columns['price']))
+    count_items=users[message.chat.id].rows[item]['amount']
+    bas_url=users[message.chat.id].rows[item]['url']
+    name= users[message.chat.id].rows[item]['name']
+    text=f'*{name}*[_]({bas_url})'  
+    item_price=users[message.chat.id].rows[item]['price']/count_items
+    total_item = count_items*item_price
+    basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
+    client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
+
+def basket_from_call(n, item, call):
+    showitem=f'{n+1}/{len(users[call.message.chat.id].rows)}'
+    total=sum(list(users[call.message.chat.id].columns['price']))
+    count_items=users[call.message.chat.id].rows[item]['amount']
+    bas_url=users[call.message.chat.id].rows[item]['url']
+    name= users[call.message.chat.id].rows[item]['name']
+    text=f'*{name}*[_]({bas_url})' 
+    item_price=users[call.message.chat.id].rows[item]['price']/count_items
+    total_item = count_items*item_price
+    basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
+    client.send_message(call.message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
 
 def basket_iter(n,call):
 
@@ -178,7 +201,7 @@ def cocktail_size(tip,call):
         price_t=cocktail['price03']  
         if call.data == name_h:
             try:
-                #init_customer_from_call(call=call)
+               
                 if name_h  in users[call.message.chat.id].rows.header:
                     users[call.message.chat.id].rows[name_h]['amount']+=1
                     users[call.message.chat.id].rows[name_h]['price']+=price_h
@@ -186,30 +209,31 @@ def cocktail_size(tip,call):
                 
                 else:          
                     users[call.message.chat.id].rows.append([name_h,cocktail_photo,1,price_h],header=name_h)
-                    client.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name} is in the card')   
-                # print(users[call.message.chat.id])
+                    client.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name} is in the card')      
             except AttributeError:
+                client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+            except NameError:
                 client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
         if call.data == name_t:
             try:
-                #init_customer_from_call(call=call)
                 if name_t  in users[call.message.chat.id].rows.header:
                     users[call.message.chat.id].rows[name_t]['amount']+=1
                     users[call.message.chat.id].rows[name_t]['price']+=price_t
                     client.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name} is in the card') 
-                
                 else:        
                     users[call.message.chat.id].rows.append([name_t,cocktail_photo,1,price_t],header=name_t)
                     client.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name} is in the card') 
             except AttributeError:
+                print('atribute error')
                 client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
-
+            except KeyError:
+                print('name error')
+                client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
 #----------------------------------------------------------------------------------------------------------------------------#
 
 @client.message_handler(commands=['start'])
 def welcome (message):
     #приветствие и основное меню внизу
-    
     client.send_chat_action(message.chat.id, 'upload_photo')
     img = open('out.jpg', 'rb')   
     url='https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/126903084_166685105188559_8109647350154471887_o.jpg?_nc_cat=105&ccb=2&_nc_sid=e3f864&_nc_ohc=d9xEBNdQ7kMAX81gdwG&_nc_ht=scontent.ftlv1-1.fna&oh=5de60ff811edb764f388dfbffed63fad&oe=5FFA7B7B'
@@ -219,14 +243,15 @@ def welcome (message):
 @client.callback_query_handler(func = lambda call:True)
 def get_call(call):
     if call.data=='menu':
-        client.send_message(chat_id=call.message.chat.id,reply_markup=cocktailkeyboard,text="We're happy to offer you this cocktails:")
+        client.send_message(chat_id=call.message.chat.id,reply_markup=cocktailkeyboard,
+                            text="We're happy to offer you this cocktails:")
     if call.data=='main':
-        #init_customer_from_call(call=call)
         client.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                reply_markup=cocktailkeyboard,text="We're happy to offer you this cocktails:")
+                            reply_markup=cocktailkeyboard,text="We're happy to offer you this cocktails:")
     if call.data=='cocktail_map':
         map1 = open('for bot.jpg', 'rb') 
-        client.send_photo(call.message.chat.id, map1 ,caption="This is our full card, choose from further categories to make an order:",reply_markup=cocktailkeyboard)  
+        client.send_photo(call.message.chat.id, map1,
+                            caption="This is our full card, choose from further categories to make an order:",reply_markup=cocktailkeyboard)  
 
     if call.data =='sig':
         cocktail_type(tip='sig',call=call)
@@ -255,20 +280,10 @@ def get_call(call):
             else: 
                 global n
                 n=0
-                showitem=f'{n+1}/{len(users[call.message.chat.id].rows)}'
                 item=users[call.message.chat.id][n][0]
-                total=sum(list(users[call.message.chat.id].columns['price']))
-                count_items=users[call.message.chat.id].rows[item]['amount']
-                bas_url=users[call.message.chat.id].rows[item]['url']
-                name= users[call.message.chat.id].rows[item]['name']
-                text=f'*{name}*[_]({bas_url})' 
-                item_price=users[call.message.chat.id].rows[item]['price']/count_items
-                total_item = count_items*item_price
-                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-                client.send_message(call.message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
+                basket_from_call(n=n, item=item, call=call)
         except AttributeError:
-            client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
-        
+            client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")     
 #---------------Basket_iter---------------------------------------------------------------------------------------------=================
     if call.data == 'next':
         try:
@@ -293,25 +308,12 @@ def get_call(call):
             client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
     if call.data=='more':
         try:
-
             item=users[call.message.chat.id][n][0]
             users[call.message.chat.id].rows[item]['price']+=users[call.message.chat.id].rows[item]['price']/users[call.message.chat.id].rows[item]['amount']
             users[call.message.chat.id].rows[item]['amount']+=1
-            showitem=f'{n+1}/{len(users[call.message.chat.id].rows)}'
-            total=sum(list(users[call.message.chat.id].columns['price']))
-            count_items=users[call.message.chat.id].rows[item]['amount']
-            bas_url=users[call.message.chat.id].rows[item]['url']
-            name= users[call.message.chat.id].rows[item]['name']
-            
-            text=f'*{name}*[_]({bas_url})' 
-            item_price=users[call.message.chat.id].rows[item]['price']/count_items
-            total_item = count_items*item_price
-            basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-            client.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,reply_markup=basket_keyboard,text=text, parse_mode='Markdown')
-
+            basket_from_call(n=n, item=item, call=call)
         except NameError:
             client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
-
 
     if call.data=='less':
         try:
@@ -322,16 +324,7 @@ def get_call(call):
                 users[call.message.chat.id].rows[item]['amount']+=1
                 users[call.message.chat.id].rows[item]['price']+=price_item
             users[call.message.chat.id].rows[item]['price']-=price_item
-            showitem=f'{n+1}/{len(users[call.message.chat.id].rows)}'
-            total=sum(list(users[call.message.chat.id].columns['price']))
-            count_items=users[call.message.chat.id].rows[item]['amount']
-            bas_url=users[call.message.chat.id].rows[item]['url']
-            name= users[call.message.chat.id].rows[item]['name']
-            text=f'*{name}*[_]({bas_url})'  
-            item_price=users[call.message.chat.id].rows[item]['price']/count_items
-            total_item = count_items*item_price
-            basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-            client.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,reply_markup=basket_keyboard,text=text, parse_mode='Markdown')
+            basket_from_call(n=n, item=item, call=call)   
         except NameError:
             client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
 
@@ -344,22 +337,13 @@ def get_call(call):
                 if n==len(users[call.message.chat.id].rows):
                     n-=1   
                 item=users[call.message.chat.id][n][0]
-                showitem=f'{n+1}/{len(users[call.message.chat.id].rows)}'
-                total=sum(list(users[call.message.chat.id].columns['price']))
-                count_items=users[call.message.chat.id].rows[item]['amount']
-                bas_url=users[call.message.chat.id].rows[item]['url']
-                name= users[call.message.chat.id].rows[item]['name']
-                text=f'*{name}*[_]({bas_url})' 
-                item_price=users[call.message.chat.id].rows[item]['price']/count_items
-                total_item = count_items*item_price
-                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-                client.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,reply_markup=basket_keyboard,text=text, parse_mode='Markdown')
+                basket_from_call(n=n, item=item, call=call)
+
         except AttributeError:
             client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
     if call.data=='order':
         try:
             name=up_name(conn='', user_id=call.message.chat.id)
-
             client.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.message_id,
                         text='Add personal info')
             client.send_message(chat_id=call.message.chat.id, text=f'What is your name?\nNow we know you as: {name[0]}', reply_markup=keyboard_for_order)
@@ -379,17 +363,7 @@ def get_text(message):
             else: 
                 global n
                 n=0
-                showitem=f'{n+1}/{len(users[message.chat.id].rows)}'
-                item=users[message.chat.id][n][0]
-                total=sum(list(users[message.chat.id].columns['price']))
-                count_items=users[message.chat.id].rows[item]['amount']
-                bas_url=users[message.chat.id].rows[item]['url']
-                name= users[message.chat.id].rows[item]['name']
-                text=f'*{name}*[_]({bas_url})' 
-                item_price=users[message.chat.id].rows[item]['price']/count_items
-                total_item = count_items*item_price
-                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-                client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
+                basket_from_message(n=n,message=message)
         except AttributeError:
             client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")   
         except NameError:
@@ -416,7 +390,6 @@ def get_text(message):
     else:
         client.send_message(message.chat.id,'Press marked button\n or start over: /start', reply_markup=mainkeyboard)
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 def get_name(message):
     try:
         if message.text == "✅Correct":
@@ -428,33 +401,13 @@ def get_name(message):
                 client.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
             else: 
                 client.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
-                showitem=f'{n+1}/{len(users[message.chat.id].rows)}'
-                item=users[message.chat.id][n][0]
-                total=sum(list(users[message.chat.id].columns['price']))
-                count_items=users[message.chat.id].rows[item]['amount']
-                bas_url=users[message.chat.id].rows[item]['url']
-                name= users[message.chat.id].rows[item]['name']
-                text=f'*{name}*[_]({bas_url})'  
-                item_price=users[message.chat.id].rows[item]['price']/count_items
-                total_item = count_items*item_price
-                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-                client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
+                basket_from_message(n=n,message=message)
         elif message.text == '⛔️Cancel':
             client.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
             if len(users[message.chat.id].rows)==0:
                 client.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
             else: 
-                showitem=f'{n+1}/{len(users[message.chat.id].rows)}'
-                item=users[message.chat.id][n][0]
-                total=sum(list(users[message.chat.id].columns['price']))
-                count_items=users[message.chat.id].rows[item]['amount']
-                bas_url=users[message.chat.id].rows[item]['url']
-                name= users[message.chat.id].rows[item]['name']
-                text=f'*{name}*[_]({bas_url})' 
-                item_price=users[message.chat.id].rows[item]['price']/count_items
-                total_item = count_items*item_price
-                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-                client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown') 
+                basket_from_message(n=n,message=message)
         else:
             if message.text == None:
                 message.text='Name'
@@ -485,17 +438,8 @@ def get_phone (message):
             if len(users[message.chat.id].rows)==0:
                 client.send_message(message.chat.id,"Oops, something is wrong🤭 let's start over, press /start")    
             else: 
-                showitem=f'{n+1}/{len(users[message.chat.id].rows)}'
-                item=users[message.chat.id][n][0]
-                total=sum(list(users[message.chat.id].columns['price']))
-                count_items=users[message.chat.id].rows[item]['amount']
-                bas_url=users[message.chat.id].rows[item]['url']
-                name= users[message.chat.id].rows[item]['name']
-                text=f'*{name}*[_]({bas_url})'
-                item_price=users[message.chat.id].rows[item]['price']/count_items
-                total_item = count_items*item_price
-                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-                client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
+                
+                basket_from_message(n=n,message=message)
         else:
             if message.text == None:
                # message.text='phone'
@@ -531,8 +475,7 @@ def get_addres(message):
             total=(sum(list(order.columns['Price'])))
             text=f'Your order:\nName:{name[0]}\nPhone:{phone[0]}\nAddress:{addres[0]}\nTotal:{total}'
             client.send_message(message.chat.id, text=text, reply_markup=last_keyboard)
-            client.register_next_step_handler(message, send_order)
-            
+            client.register_next_step_handler(message, send_order)   
         elif message.text=='⬅️Back':
             phone=up_phone(conn='', user_id=message.chat.id)
             client.send_message(message.chat.id, text=f'Your phone number\nNow: {phone[0]}',reply_markup=keyboard_for_order)
@@ -542,17 +485,7 @@ def get_addres(message):
             if len(users[message.chat.id].rows)==0:
                 client.send_message(message.chat.id,"Oops, something is wrong🤭 let's start over, press /start")    
             else: 
-                showitem=f'{n+1}/{len(users[message.chat.id].rows)}'
-                item=users[message.chat.id][n][0]
-                total=sum(list(users[message.chat.id].columns['price']))
-                count_items=users[message.chat.id].rows[item]['amount']
-                bas_url=users[message.chat.id].rows[item]['url']
-                name= users[message.chat.id].rows[item]['name']
-                text=f'*{name}*[_]({bas_url})'           
-                item_price=users[message.chat.id].rows[item]['price']/count_items
-                total_item = count_items*item_price
-                basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-                client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown') 
+                basket_from_message(n=n,message=message)        
         else:
             if message.text == None:
                 message.text='addres'
@@ -581,12 +514,10 @@ def get_addres(message):
             client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
 def send_order(message):
     try:
-        if message.text == '✅Send Order':
-                    
+        if message.text == '✅Send Order':     
             order=BeautifulTable()
             order.columns.header=['Name','Amount','Price']
             cocktails=len(users[message.chat.id].rows)
-
             for i in range(cocktails):
                 name=users[message.chat.id][i]['name']
                 amount=users[message.chat.id][i]['amount']
@@ -606,36 +537,24 @@ def send_order(message):
             client.send_message(197634497, text=f'новый заказ:\n{text}\nзаказали\n{order}')
             init_customer_from_message(message)
         if message.text == '⬅️Back':
-            
             addres=up_addres(conn='',user_id=message.chat.id)
             client.send_message(message.chat.id, text=f'Your address:\nNow: {addres[0]}',reply_markup=keyboard_for_order)
             client.register_next_step_handler(message, get_addres)
     except AttributeError:
         client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
     
-
 @client.message_handler(content_types = ['voice'])
 def get_audio(message):
     client.send_chat_action(message.chat.id, 'upload_voice')
     aud = open('reqe.ogg', 'rb')   
     client.send_voice(chat_id=message.chat.id, voice=aud) 
-    
     client.send_message(message.chat.id, text='You have a pleasant voice.\nNow press here /start', reply_markup=mainkeyboard)
 
 @client.message_handler(content_types = ['photo'])
 def get_photo(message):
-    
     client.send_message(message.chat.id, text="Look what I've got", reply_markup=mainkeyboard)
     client.send_chat_action(message.chat.id, 'upload_voice')
     ph = open('siski1.jpg', 'rb')   
-    client.send_photo(message.chat.id, ph, caption="If you wanna see more /start")  
-    
-    
+    client.send_photo(message.chat.id, ph, caption="If you wanna see more /start")      
 client.polling(none_stop= True, interval=0)
-
-
 # if __name__ =="__main__":
-#     print (basket)
-#     print (basket[0]['name'])
-#     sumtest = 1
-#     print (basket[0]['amount']+basket[1]['amount'])
