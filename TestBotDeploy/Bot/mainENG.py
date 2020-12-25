@@ -531,16 +531,13 @@ def get_addres(message):
                 amount=users[message.chat.id][i]['amount']
                 price=users[message.chat.id][i]['price']
                 order.rows.append([name, amount, price])
-            item=users[message.chat.id][n][0]
             name=up_name(conn='', user_id=message.chat.id)
             phone=up_phone(conn='', user_id=message.chat.id)
             addres=up_addres(conn='',user_id=message.chat.id)
             order.set_style(BeautifulTable.STYLE_COMPACT)
             total=(sum(list(order.columns['Price'])))
             text=f'Your order:\nName:{name[0]}\nPhone:{phone[0]}\nAddress:{addres[0]}\nTotal:{total}'
-            item_price=users[message.chat.id].rows[item]['price']/count_items
-            total_item = count_items*item_price
-            basket_keyboard=basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
+            client.send_message(message.chat.id, text=text, reply_markup=last_keyboard)
             client.register_next_step_handler(message, send_order)
             
         elif message.text=='⬅️Back':
