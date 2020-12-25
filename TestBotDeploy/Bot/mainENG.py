@@ -531,6 +531,7 @@ def get_addres(message):
                 amount=users[message.chat.id][i]['amount']
                 price=users[message.chat.id][i]['price']
                 order.rows.append([name, amount, price])
+            item=users[message.chat.id][n][0]
             name=up_name(conn='', user_id=message.chat.id)
             phone=up_phone(conn='', user_id=message.chat.id)
             addres=up_addres(conn='',user_id=message.chat.id)
