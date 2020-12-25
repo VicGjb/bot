@@ -22,8 +22,6 @@ import psycopg2
 #https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/126903084_166685105188559_8109647350154471887_o.jpg?_nc_cat=105&ccb=2&_nc_sid=e3f864&_nc_ohc=d9xEBNdQ7kMAX81gdwG&_nc_ht=scontent.ftlv1-1.fna&oh=5de60ff811edb764f388dfbffed63fad&oe=5FFA7B7B
 
 client=telebot.TeleBot(configure.config['token'])
-# app=Flask(__name__)
-# sslify=SSLify(app)
 global users
 users={}
 key = init_user(conn='')
@@ -33,7 +31,7 @@ for id in key:
     users.update({t:f'{t}_basket'})
 
 #mainekeyboard
-mainkeyboard=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2,one_time_keyboard=False)
+mainkeyboard=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
 menubutton = types.KeyboardButton ('🍴Menu🍴') 
 basketbutton = types.KeyboardButton('🛍Card🛍')
 aboutus = types.KeyboardButton('💁🏻‍♀️Info💁🏻‍♀️')
@@ -137,21 +135,21 @@ def init_customer_from_call(call):
         users[call.message.chat.id]=BeautifulTable()
         users[call.message.chat.id].columns.header=["name", "url", "amount", "price"]
     else:
-        #print ('not work')
+   
         add_user(conn='',user_id=call.message.chat.id, name=call.message.from_user.first_name)
         key = init_user(conn='')
         for id in key:
             t=id['user_id']
             users.update({t:f'{t}_basket'})
-        #print (users)
+       
         users[call.message.chat.id]=BeautifulTable()
         users[call.message.chat.id].columns.header=["name", "url", "amount", "price"]
-        #print(users[call.message.chat.id])
+
     return users[call.message.chat.id]
 
 def cocktail_type(tip,call):
     if call.data == tip:
-            #init_customer_from_call(call=call)
+
         m=up_cocktail(conn='',tip=tip)
         for cocktail in m:
             
@@ -169,7 +167,6 @@ def cocktail_type(tip,call):
             trade_keyboard=keyboard(price05,price03,cocktail_name)
             
             client.send_photo(call.message.chat.id, pic, reply_to_message_id="Б",caption=text,reply_markup=trade_keyboard,parse_mode='HTML')
-# print(users)
 def cocktail_size(tip,call):
     m=up_cocktail(conn='',tip=tip)
     for cocktail in m:
@@ -395,10 +392,10 @@ def get_text(message):
                 client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
         except AttributeError:
             client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")   
-        # except NameError:
-        #     client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")   
-        # except KeyError:
-        #     client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+        except NameError:
+            client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")   
+        except KeyError:
+            client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
     elif message.text == '💁🏻‍♀️Info💁🏻‍♀️':
         url='https://scontent.fhfa1-1.fna.fbcdn.net/v/t1.0-9/51087951_2681893448493125_7010877500414754816_o.jpg?_nc_cat=107&ccb=2&_nc_sid=174925&_nc_ohc=W5-onSfCwL4AX-gsWKY&_nc_ht=scontent.fhfa1-1.fna&oh=d41c099e79bb84248488f1466a085962&oe=600672E5'
         chris= open('chris.jpg','wb')
@@ -411,8 +408,11 @@ def get_text(message):
     elif message.text == '🧳Orders🧳':
         a=get_ord(conn='',user_id=message.chat.id, limit=5)
         text='\n------------\n'.join([f'{m} \n {n}' for m, n in a])
-        print(text)
-        client.send_message(message.chat.id, text=f'Your last orders:\n\n{text}\n',reply_markup=mainkeyboard)
+        if text=='':
+            client.send_message(message.chat.id, text=f"You have no orders yet, it's time to order your first cocktail🍸 press /start",reply_markup=mainkeyboard)
+        else:
+            print(text)
+            client.send_message(message.chat.id, text=f'Your last orders:\n\n{text}\n',reply_markup=mainkeyboard)
     else:
         client.send_message(message.chat.id,'Press marked button\n or start over: /start', reply_markup=mainkeyboard)
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -469,12 +469,7 @@ def get_name(message):
                 client.register_next_step_handler(message, get_phone)
     except AttributeError:
             client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
-    # finally:
-    #         print(message.chat.id)
-    #         message.text='debil'
-    #         add_name(conn='', name=message.text, user_id=message.chat.id)
-    #         client.send_message(message.chat.id, text= 'Веди имя буквами')
-    #         client.register_next_step_handler(message, get_phone)
+   
 def get_phone (message):
     try:
         if message.text == "✅Correct":
@@ -503,13 +498,11 @@ def get_phone (message):
                 client.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
         else:
             if message.text == None:
-                message.text='phone'
-                add_name(conn='', name=message.text, user_id=message.chat.id)
+               # message.text='phone'
                 client.send_message(message.chat.id, text= 'Type your phone number (format 0500000000)')
                 client.register_next_step_handler(message, get_phone)
             elif message.text.isalpha():
-                message.text='phone'
-                add_name(conn='', name=message.text, user_id=message.chat.id)
+                #message.text='phone'
                 client.send_message(message.chat.id, text= 'Type your phone number (format 0500000000)')
                 client.register_next_step_handler(message, get_phone)
             else:
@@ -605,9 +598,9 @@ def send_order(message):
             order.set_style(BeautifulTable.STYLE_COMPACT)
             total=(sum(list(order.columns['Price'])))
 
-            text=f'Заказ:\nИмя:{name[0]}\nТeлефон:{phone[0]}\nАдрес:{addres[0]}\nВсего:{total}\n'
+            text=f'Order:\nName:{name[0]}\nPhone:{phone[0]}\nAddress:{addres[0]}\nTotal:{total}\n'
             add_order(conn='', user_id=message.chat.id, order=text)
-           # add_ord(conn='', user_id=message.chat.id, zakaz=text)
+            add_ord(conn='', user_id=message.chat.id, zakaz=text)
 
             client.send_message(message.chat.id, text='Thank you for your order!\nThe package will be delivered today from 20:00 to 23:00', reply_markup=mainkeyboard)
             client.send_message(197634497, text=f'новый заказ:\n{text}\nзаказали\n{order}')
@@ -619,12 +612,7 @@ def send_order(message):
             client.register_next_step_handler(message, get_addres)
     except AttributeError:
         client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
-    #except psycopg2.errors.NotNullViolation:        
-    # except psycopg2.errors.NotNullViolation:
-    #     client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start") 
-    # finally:
-    #     client.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
-
+    
 
 @client.message_handler(content_types = ['voice'])
 def get_audio(message):
