@@ -44,7 +44,7 @@ sign_type=types.InlineKeyboardButton(text='🍹Signature Cocktails🍹', callbac
 classic_type=types.InlineKeyboardButton(text='🍸Classic Coktails🍸',callback_data='Classic Coktails')
 g_t_type=types.InlineKeyboardButton(text='🍋Gin&Tonic🍋',callback_data='Gin&Tonic')
 spritzs_type=types.InlineKeyboardButton(text='🍾Aperol Spritz Twists🍊',callback_data='Aperol Spritz')
-negroni_type=types.InlineKeyboardButton(text='🥃Negroni Twists🍊',callback_data='Negroni')
+negroni_type=types.InlineKeyboardButton(text='🥃Negroni Twists🍊',callback_data='Negronis')
 cocktailkeyboard.add(cocktail_map, sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
 
 #order keyboard reply
@@ -265,9 +265,9 @@ def get_call(call):
         cocktail_type(tip='Aperol Spritz',call=call)
     cocktail_size(tip='Aperol Spritz',call=call)
     
-    if call.data =='Negroni':
-        cocktail_type(tip='Negroni',call=call)
-    cocktail_size(tip='Negroni',call=call)  
+    if call.data =='Negronis':
+        cocktail_type(tip='Negronis',call=call)
+    cocktail_size(tip='Negronis',call=call)  
     #-----------------------Baskect====================================================================================================
     if call.data == 'basket':
         try:
