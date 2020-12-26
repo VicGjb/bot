@@ -43,7 +43,7 @@ cocktail_map=types.InlineKeyboardButton(text='📜Cocktail Card📜', callback_d
 sign_type=types.InlineKeyboardButton(text='🍹Signature Cocktails🍹', callback_data='Signature Cocktails')
 classic_type=types.InlineKeyboardButton(text='🍸Classic Coktails🍸',callback_data='Classic Coktails')
 g_t_type=types.InlineKeyboardButton(text='🍋Gin&Tonic🍋',callback_data='Gin&Tonic')
-spritzs_type=types.InlineKeyboardButton(text='🍾Aperol Spritz Twists🍊',callback_data='Aperol Spritz')
+spritzs_type=types.InlineKeyboardButton(text='🍾Aperol Spritz Twists🍊',callback_data='Spritz')
 negroni_type=types.InlineKeyboardButton(text='🥃Negroni Twists🍊',callback_data='Negronis')
 cocktailkeyboard.add(cocktail_map, sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
 
@@ -261,9 +261,9 @@ def get_call(call):
         cocktail_type(tip='Gin&Tonic',call=call)
     cocktail_size(tip='Gin&Tonic',call=call)
     
-    if call.data =='Aperol Spritz':
-        cocktail_type(tip='Aperol Spritz',call=call)
-    cocktail_size(tip='Aperol Spritz',call=call)
+    if call.data =='Spritz':
+        cocktail_type(tip='Spritz',call=call)
+    cocktail_size(tip='Spritz',call=call)
     
     if call.data =='Negronis':
         cocktail_type(tip='Negronis',call=call)
