@@ -256,7 +256,6 @@ def init_customer_from_call(call):
         users[call.message.chat.id]=BeautifulTable()
         users[call.message.chat.id].columns.header=["name", "url", "amount", "price"]
     return users[call.message.chat.id]     
-
 #-----------------------Start of comunication-------------------------------------------------------------------------------------\
 #----------------------------Welcome message--------------------------------------------------------------------------------------\
 @client.message_handler(commands=['start'])
@@ -367,8 +366,6 @@ def get_call(call):
             client.register_next_step_handler(call.message, get_name)
         except AttributeError:
             client.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
-
-
 #---------------comutication by ReplyKeyboard------------------------------------------------------------------------------------------------------\
 @client.message_handler(content_types = ['text'])
 def get_text(message):
