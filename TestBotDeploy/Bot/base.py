@@ -158,6 +158,11 @@ def up_cocktail (conn,tip):
     c.execute ('SELECT name, url_photo, description, price05, price03 FROM cocktails WHERE type = %s',(tip,))
     return c.fetchall()
 
+@ensure_connection_db
+def up_cocktail_type (conn):
+    c=conn.cursor(cursor_factory=DictCursor)
+    c.execute ('SELECT DISTINCT type FROM cocktails')
+    return c.fetchall()
 
 @ensure_connection_db
 def init_db_users(conn, force:bool=False):
