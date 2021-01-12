@@ -154,9 +154,9 @@ def init_db_cocktail (conn, force:bool=False):
     conn.commit()
 
 @ensure_connection_db
-def up_cocktail (conn,tip):
+def up_cocktail (conn):
     c=conn.cursor(cursor_factory=DictCursor)
-    c.execute ('SELECT name, type, url_photo, description, price05, price03 FROM cocktails WHERE type = %s',(tip,))
+    c.execute ('SELECT name, type, url_photo, description, price05, price03 FROM cocktails')# WHERE type = %s',(tip,))
     return c.fetchall()
 
 @ensure_connection_db
@@ -183,11 +183,11 @@ def init_db_users(conn, force:bool=False):
          )
      ''')
     conn.commit()
-@ensure_connection_db
-def add_user(conn, user_id:int, name:str):
-    c=conn.cursor(cursor_factory=DictCursor)
-    c.execute ('INSERT INTO users (user_id,name) VALUES(%s,%s)',(user_id, name))
-    conn.commit()
+# @ensure_connection_db
+# def add_user(conn, user_id:int, name:str):
+#     c=conn.cursor(cursor_factory=DictCursor)
+#     c.execute ('INSERT INTO users (user_id,name) VALUES(%s,%s)',(user_id, name))
+#     conn.commit()
 
 @ensure_connection_db
 def init_user(conn):
@@ -195,10 +195,28 @@ def init_user(conn):
     c.execute('SELECT user_id FROM users')
     return c.fetchall()
 
+# @ensure_connection_db
+# def add_to_basket(conn, user_id, basket):
+#     c=conn.cursor(cursor_factory=DictCursor)
+#     c.execute('UPDATE users SET basket = %s WHERE user_id = %s',(basket, user_id))
+#     conn.commit()
 @ensure_connection_db
-def add_to_basket(conn, user_id, basket):
+def up_users(conn):
     c=conn.cursor(cursor_factory=DictCursor)
-    c.execute('UPDATE users SET basket = %s WHERE user_id = %s',(basket, user_id))
+    c.execute('SELECT user_id, name, phone, addres, ord FROM users')
+    return c.fetchall()
+
+@ensure_connection_db
+def update_users(conn, name, phone, addres, ord, user_id):
+    c=conn.cursor(cursor_factory=DictCursor)
+    c.execute('UPDATE users SET name=%s, phone=%s, addres=%s, ord=%s WHERE user_id=%s',(name, phone, addres, ord, user_id, ))
+    conn.commit()
+
+
+@ensure_connection_db
+def add_user(conn, user_id:int, name:str):
+    c=conn.cursor(cursor_factory=DictCursor)
+    c.execute ('INSERT INTO users (user_id,name) VALUES(%s,%s)',(user_id, name))
     conn.commit()
 
 @ensure_connection_db
@@ -255,12 +273,16 @@ def add_ord(conn,user_id,zakaz):
     a = time.ctime(time.time())
     c.execute('INSERT INTO ord (users,time_n,zakaz) VALUES(%s,%s,%s)',(user_id,a,zakaz))
     conn.commit()
+# @ensure_connection_db
+# def get_ord(conn):
+#     c=conn.cursor(cursor_factory=DictCursor)
+#     c.execute('SELECT time_n, zakaz FROM ord WHERE users=%s ORDER BY id DESC LIMIT %s',(user_id, limit,))
+#     return c.fetchall()
 @ensure_connection_db
-def get_ord(conn,user_id, limit=10):
+def get_ord(conn):
     c=conn.cursor(cursor_factory=DictCursor)
-    c.execute('SELECT time_n, zakaz FROM ord WHERE users=%s ORDER BY id DESC LIMIT %s',(user_id, limit,))
+    c.execute('SELECT users, time_n, zakaz FROM ord ORDER BY id DESC')
     return c.fetchall()
-
 
 if __name__=='__main__':
     # a=up_cocktail_type(conn='')
