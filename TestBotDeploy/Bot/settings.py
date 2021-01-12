@@ -82,14 +82,7 @@ if DEBUG:
         }
     }
 else:
-    DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'testbot',
-        'USER': 'testvic',
-        'PASSWORD': 'Sam!Plushka261',
-        'HOST': 'localhost',
-        'PORT': '',
+  
     }
 }
    
