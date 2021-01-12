@@ -490,10 +490,17 @@ async def get_text(message):
             if len(users[f'{message.chat.id}_last_orders'])==0:
                 await bot.send_message(message.chat.id, text=f"You have no orders yet, it's time to order your first cocktail🍸 press /start",reply_markup=mainkeyboard)
             else:
-                for i in range (len(users[f'{message.chat.id}_last_orders'].rows)):
-                        time=users[f'{message.chat.id}_last_orders'].rows[i]['time']
-                        order=users[f'{message.chat.id}_last_orders'].rows[i]['order']
-                        text=text + (f'{time} \n{order}\n--------------------\n')
+                if len(users[f'{message.chat.id}_last_orders'].rows) <=5:
+
+                    for i in range (len(users[f'{message.chat.id}_last_orders'].rows)):
+                            time=users[f'{message.chat.id}_last_orders'].rows[i]['time']
+                            order=users[f'{message.chat.id}_last_orders'].rows[i]['order']
+                            text=text + (f'{time} \n{order}\n--------------------\n')
+                else:
+                    for i in range (5):
+                            time=users[f'{message.chat.id}_last_orders'].rows[i]['time']
+                            order=users[f'{message.chat.id}_last_orders'].rows[i]['order']
+                            text=text + (f'{time} \n{order}\n--------------------\n')
                 await bot.send_message(message.chat.id, text=f'Your last orders:\n\n{text}\n',reply_markup=mainkeyboard) 
         except KeyError:
             print('KeyError in orders') 
