@@ -833,6 +833,7 @@ async def get_text(message):
             mainkeyboard=await main_keyboard_down(lang=temp_lang)
             await bot.send_message(message.chat.id, text=lang_dict[f'else_text_{temp_lang}'], reply_markup=mainkeyboard)
         except KeyError:
+            print('im keyError in else get_text')
             await oops_message(chat_id=message.chat.id)
 
 # #--------------Validation and order-------------------------------------------------------------------------------------------------
@@ -887,14 +888,18 @@ async def get_name(message, state:FSMContext):
 
     except AttributeError: #NameError: #AttributeError:
             print('AtrError in get_name')
-            oops_message(chat_id= message.chat.id)
+            await oops_message(chat_id= message.chat.id)
 
 @client.message_handler(state=MakeOrder.get_phone, content_types=types.ContentTypes.TEXT)   
 async def get_phone (message, state:FSMContext):
     try:
         temp_lang=users[f'{message.chat.id}_lang']
         if message.text == '✅Correct' or message.text=='✅Верно'  or message.text=='נכון✅':
-            if users[f'{message.chat.id}_person'].columns['phone'][f'{message.chat.id}'].isdigit():
+            if users[f'{message.chat.id}_person'].columns['phone'][f'{message.chat.id}'] == None:
+                await bot.send_message(message.chat.id, text=lang_dict[f'non_phone_{temp_lang}'])
+                await MakeOrder.get_phone.set()
+
+            elif users[f'{message.chat.id}_person'].columns['phone'][f'{message.chat.id}'].isdigit():
 
                 addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
                 keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
@@ -940,9 +945,9 @@ async def get_phone (message, state:FSMContext):
             else:
                 await bot.send_message(message.chat.id, text=lang_dict[f'non_phone_{temp_lang}'])
                 await MakeOrder.get_phone.set()
-    except AttributeError:
+    except NameError:# AttributeError:
             print('im AttrError in get_phone')
-            oops_message(chat_id=call.message.chat.id)
+            await oops_message(chat_id=message.chat.id)
 
 @client.message_handler(state=MakeOrder.get_addres, content_types=types.ContentTypes.TEXT)
 async def get_addres(message, state:FSMContext):
@@ -1019,7 +1024,7 @@ async def get_addres(message, state:FSMContext):
                 await MakeOrder.make_order.set()
     except AttributeError:
         print('AttError get_address')
-        oops_message(chat_id=call.message.chat.id)
+        await oops_message(chat_id=message.chat.id)
 
 @client.message_handler(state=MakeOrder.make_order, content_types=types.ContentTypes.TEXT)
 async def send_order(message, state:FSMContext):
@@ -1079,7 +1084,7 @@ async def send_order(message, state:FSMContext):
         
     except AttributeError:#NameError: 
         print('AttrErr Send_order')
-        oops_message(chat_id=message.chat.id)
+        await oops_message(chat_id=message.chat.id)
 
 #  #-------------------Protection from stupid messages---------------------------------------------------------------------------------   
 @client.message_handler(content_types = ['voice'])
