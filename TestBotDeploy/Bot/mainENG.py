@@ -27,6 +27,7 @@ from base import get_ord
 from base import up_cocktail_type
 from base import up_users
 from base import update_users
+ 
 from beautifultable import BeautifulTable
 
 bot=Bot(configure.config['token'])
@@ -46,11 +47,13 @@ for id in key:
     t_person=f'{i}_person'
     t_call=f'{i}_call'
     t_orders=f'{i}_last_orders'
-    users.update({t_id:'',t_basket:'',t_cocktail_menu:'',t_call:'',t_orders:''})
+    t_language=f'{i}_lang'
+    users.update({t_id:'',t_basket:'',t_cocktail_menu:'',t_call:'',t_orders:'',t_language:''})
 
 
 global type_cocktail
 type_cocktail=up_cocktail_type(conn='')
+
 
 global cocktail_menu
 cocktail_menu=up_cocktail(conn='')
@@ -74,14 +77,175 @@ all_orders.columns.header=['user_id','time','order']
 for order in temp_all_orders:
     all_orders.rows.append(order,header=f'{order[0]}')
 
-global oops_messege
 url_types={
            'Signature Cocktails':'https://github.com/VicGjb/bot/blob/master/Signature%20cocktail.jpg?raw=true',
            'Classic Coktails':'https://github.com/VicGjb/bot/blob/master/classic%20cocktail.jpg?raw=true',
            'Gin&Tonic':'https://github.com/VicGjb/bot/blob/master/Gin&tonic.jpg?raw=true',
            'Spritz':'https://github.com/VicGjb/bot/blob/master/Aperol.jpg?raw=true',
-           'Negronis':'https://github.com/VicGjb/bot/blob/master/negroni.jpg?raw=true'
+           'Negronis':'https://github.com/VicGjb/bot/blob/master/negroni.jpg?raw=true',
+           
+           'Авторские коктейли':'https://github.com/VicGjb/testbot/blob/main/sign_RUS.jpg?raw=true',
+           'Классические коктейли':'https://github.com/VicGjb/testbot/blob/main/classic_RUS.jpg?raw=true',
+           'Джин и тоник':'https://github.com/VicGjb/testbot/blob/main/g&t_RUS.jpg?raw=true',
+           'Апероль спритц твисты':'https://github.com/VicGjb/testbot/blob/main/aperol_RUS.jpg?raw=true',
+           'Негрони твисты':'https://github.com/VicGjb/testbot/blob/main/negroni_RUS.jpg?raw=true',
+           
+           'קוקטיילים הבית':'https://github.com/VicGjb/testbot/blob/main/sing_HEB.jpg?raw=true',
+           'קוקטיילים קלאסיים':'https://github.com/VicGjb/testbot/blob/main/classic_HEB.jpg?raw=true',
+           "ג'ין וטוניק":'https://github.com/VicGjb/testbot/blob/main/g&t_HEB.jpg?raw=true',
+           'אפרול שפריץ טוויסת':'https://github.com/VicGjb/testbot/blob/main/aperol_HEBjpg.jpg?raw=true',
+           'נגרוני טוויסת':'https://github.com/VicGjb/testbot/blob/main/negroni_HEB.jpg?raw=true',
+
+           'logo':'https://github.com/VicGjb/testbot/blob/main/LOGO%20MADE%20BY%20TEL.jpg?raw=true'
            }
+
+global lang_dict
+lang_dict={
+            'oops_ENG':"Oops, something is wrong🤭 let's start over, press /start",
+            'oops_HEB':'Что-то пошло не так,🤭 cose u fuckin жид/start',
+            'oops_RUS':'Что-то пошло не так,🤭 начнем с начала, нажмите /start',
+            
+            'cocktail_type_message_ENG':"We're happy to offer you this cocktails:",
+            'cocktail_type_message_HEB':"נשמח להציע לך  את סוגי המשקאות הבאים:",
+            'cocktail_type_message_RUS':"Рады предложить вам следующие виды напитков:",
+            
+            'empty_card_ENG':"The card is empty, let's choose your cocktails: /start",
+            'empty_card_HEB':'הסל ריק, הגיע הזמן לבחור משהו',
+            'empty_card_RUS':'Корзина пуста, самое время что-нибуть выбрать: /start',
+
+            'add_info_ENG':'Add personal info',
+            'add_info_HEB':'נתחיל את ההזמנה',
+            'add_info_RUS':'Оформляем заказ',
+
+            'empty_orders_ENG':"You have no orders yet, it's time to order your first cocktail🍸 press /start",
+            'empty_orders_HEB':' אין לך הזמנות,זה הזמן לעשות את ההזמנה הראשונה שלך🍸 תבחר בתפריט למטה או תלחץ כאן /start',
+            'empty_orders_RUS':'У вас пока нет закзав, самое время сделать ваш первый🍸 выберете меню внизу или нажмите /start',
+            
+            'history_orders_ENG':'Your last orders:\n\n',
+            'history_orders_HEB':'\nההזמנות האחרונות שלך:\n\n',
+            'history_orders_RUS':'Ваши последние заказы:\n\n',
+
+            'else_text_ENG':'Press marked button\n or start over: /start',
+            'else_text_HEB':'תבחר משהו בתפריט למטה⤵️\n/start או תלחץ כאן',
+            'else_text_RUS':'Выберите что-нибудть в меню:⤵️\n или нажми сюда /start',
+
+            'info_ENG':"We're the team of professional bartenders, who will provide you the best drinks for your joy! \n*Contacts:*\n[Facebook](https://www.facebook.com/coctailexpresstlv)\n[Instagram](https://www.instagram.com/cocktailexpresstlv)\nPhone: 053-306-7303",
+            'info_HEB':'אנחנו צוות של ברמנים מקצועיים, אנו מכינים משקאות קלאסיים ומקוריים למצב הרוח שלכם!\nליצירת קשר:\n[Facebook](https://www.facebook.com/coctailexpresstlv)\n[Instagram](https://www.instagram.com/cocktailexpresstlv)\nטלפון: 053-306-7303',
+            'info_RUS':'Мы команда профессиональных барменов, готовим классические, и оригинальные напитки для вашего настроения.\n*Контакты:*\n[Facebook](https://www.facebook.com/coctailexpresstlv)\n[Instagram](https://www.instagram.com/cocktailexpresstlv)\nТелефон: 053-306-7303',
+            
+            'ask_name_ENG':'What is your name?\nNow we know you as: ',
+            'ask_name_HEB':'איך קוראים לך?\nנקלט במערכת שם:  ',
+            'ask_name_RUS':'Как вас зовут?\nCейчас так: ',
+     
+            'ask_phone_ENG':'Your phone number\nNow: ',
+            'ask_phone_HEB':'מה מספר הטלפון שלך?\nהמספר טלפון שלך עכשיו הוא: ',
+            'ask_phone_RUS':'Ваш телефон\nСейчас: ',
+
+            'ask_address_ENG':'Your address:\nNow: ',
+            'ask_address_HEB':'מה הכתובת שלך \nהכתובת שלך עכשיו היא:  ',
+            'ask_address_RUS':'Адрес:\nСейчас: ',
+
+            'back_to_card_ENG':'back to cart',
+            'back_to_card_HEB':'חוזרים לסל קניות',
+            'back_to_card_RUS':'возвращаемся в корзину',
+
+            'non_name_ENG':'Type your name',
+            'non_name_HEB':'תכתוב את השם שלך',
+            'non_name_RUS':'Напишите ваше имя',
+
+            'non_phone_ENG':'Type your phone number (format 0500000000)',
+            'non_phone_HEB':'מספר טלפון רק במספרים',
+            'non_phone_RUS':'Введите номер только цифрами',
+
+            'non_address_ENG':'Type address: ',
+            'non_address':'תכתוב את הכתובת שלך',
+            'non_address':'Введите адрес',
+
+            'send_order_else_ENG':'Press one of the buttons below',
+            'send_order_else_HEB':'תבחר אחד מהאופציות למטה',
+            'send_order_else_RUS':'Нажмите одну из кнопок ниже',
+
+            'send_order_name_ENG':'Your order:\nName: ',
+            'send_order_name_HEB':'הזמנה שלך:\nשם: ',
+            'send_order_name_RUS':'Ваш закз:\nИмя: ',
+
+            'send_order_phone_ENG':'\nPhone:',
+            'send_order_phone_HEB':'\nטלפון:  ',
+            'send_order_phone_RUS':'\nТелефон: ',
+
+            'send_order_address_ENG':'\nAddress:',
+            'send_order_address_HEB':'\nכתובת: ',
+            'send_order_address_RUS':'\nАдрес: ',
+
+            'send_order_total_ENG':'\nTotal:',
+            'send_order_total_HEB':'\nסה"כ  לתשלום: ',
+            'send_order_total_RUS':'\nВсего: ',
+
+            'tnx_ENG':'Thank you for your order!\nThe package will be delivered today from 20:00 to 23:00',
+            'tnx_HEB':'תודה על הזמנתך\nהזמנה תגיעי היום בין השעות 20:00-23:00',
+            'tnx_RUS':'Спасибо за заказ!\nДоставим сегодня вечером с 20:00 до 23:00',
+
+            'added_in_card_ENG':' is in the card',
+            'added_in_card_HEB':'  הוסף לסל',
+            'added_in_card_RUS':' добавлен в корзину',
+            
+#---------------------------------------------------------------------------------------
+            'order_correct_ENG':'✅Correct',
+            'order_correct_HEB':'נכון✅',
+            'order_correct_RUS':'✅Верно',
+
+            'order_back_ENG':'⬅️Back',
+            'order_back_HEB':'חזרה⬅️',
+            'order_back_RUS':'⬅️Назад',
+
+            'order_cancel_ENG':'⛔️Cancel',
+            'order_cancel_HEB':'ביטול⛔️',
+            'order_cancel_RUS':'⛔️Отменить',
+
+            'send_order_ENG':'✅Send Order',
+            'send_order_HEB':'לעשות הזמנה✅',
+            'send_order_RUS':'✅Заказать',
+
+            'sand_order_back_ENG':'⬅️Back',
+            'sand_order_back_HEB':'חזרה⬅️',
+            'sand_order_back_RUS':'⬅️Назад',
+#-------------------------------------------
+            'trade_buy05_ENG':'🛍Buy 0.5L',
+            'trade_buy05_HEB':'לקניה 0.5ל🛍',
+            'trade_buy05_RUS':'🛍Купить 0.5L',
+
+            'trade_buy03_ENG':'🛍Buy 0.3L',
+            'trade_buy03_HEB':'לקניה 0.3ל🛍',
+            'trade_buy03_RUS':'🛍Купить 0.3L',
+
+            'trade_card_ENG':'🛒Go to Card',
+            'trade_card_HEB':'לסל🛒',
+            'trade_card_RUS':'🛒В корзину',
+
+            'trade_back_ENG':'◀️Back',
+            'trade_back_HEB':'חזרה▶️',
+            'trade_back_RUS':'⬅️Назад',
+#-----------------------------basket---------------------------------------
+            'basket_next_ENG':'next ▶️',
+            'basket_next_HEB':'◀️הבא',
+            'basket_next_RUS':'след.▶️',
+
+            'basket_back_ENG':'◀️prev.',
+            'basket_back_HEB':'הקודם▶️',
+            'basket_back_RUS':'◀️пред.',
+
+            'basket_start_order_ENG':'✅Make Order',
+            'basket_start_order_HEB':'לעבור להזמנה✅',
+            'basket_start_order_RUS':'✅Оформить заказ',
+
+            'basket_back_menu_ENG':'🍸Continue Shopping',
+            'basket_back_menu_HEB':'לתפריט🍸',
+            'basket_back_menu_RUS':'🍸Продолжить покупку',
+
+            'cocktails_name_keyboard_ENG':'◀️Main menu📜',
+            'cocktails_name_keyboard_HEB':'📜תפריט ראשי▶️',
+            'cocktails_name_keyboard_RUS':'◀️В меню📜',
+            }
 
 class MakeOrder(StatesGroup):
     get_name=State()
@@ -91,47 +255,125 @@ class MakeOrder(StatesGroup):
     back_to_card=State()
 
 #-----------------------------------------Static Keybords-----------------------\
+#language keyboard
+language_keyboard=types.InlineKeyboardMarkup(row_width=1)
+eng_language=types.InlineKeyboardButton(text='🇬🇧ENG🇬🇧', callback_data='ENG')
+rus_language=types.InlineKeyboardButton(text='🇮🇱HEB🇮🇱', callback_data='HEB')
+heb_language=types.InlineKeyboardButton(text='🇷🇺RUS🇷🇺', callback_data='RUS')
+language_keyboard.add(eng_language, rus_language, heb_language)
+
+#message
+async def oops_message(chat_id):
+    await bot.send_message(chat_id, text=lang_dict[f'oops_ENG'])
+
+async def oops_edit_message(chat_id, message_id):
+    cocktailkayboard=await cocktail_type_keyboard(lang='ENG')
+    await bot.edit_message_text(chat_id=chat_id, message_id=message_id,reply_markup=cocktailkeyboard,text=lang_dict[f'oops_ENG'])
+
 #maine keyboard reply
-mainkeyboard=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-menubutton = types.KeyboardButton ('🍴Menu🍴') 
-basketbutton = types.KeyboardButton('🛒Card🛒')
-aboutus = types.KeyboardButton('💁🏻‍♀️Info💁🏻‍♀️')
-orders = types.KeyboardButton('🧳Orders🧳')
-mainkeyboard.add(menubutton, basketbutton, aboutus, orders)
+async def main_keyboard_down(lang):
+    if lang=='ENG':
+        mainkeyboard=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+        menubutton = types.KeyboardButton ('🍴Menu🍴') 
+        basketbutton = types.KeyboardButton('🛒Card🛒')
+        aboutus = types.KeyboardButton('💁🏻‍♀️Info💁🏻‍♀️')
+        orders = types.KeyboardButton('🧳Orders🧳')
+        language_button=types.KeyboardButton('Change language 🇮🇱 🇬🇧 🇷🇺')
+        mainkeyboard.add(menubutton, basketbutton, aboutus, orders, language_button)
+        return mainkeyboard
+    if lang=='RUS':
+        mainkeyboard=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+        menubutton = types.KeyboardButton ('🍴Меню🍴') 
+        basketbutton = types.KeyboardButton('🛒Корзина🛒')
+        aboutus = types.KeyboardButton('💁🏻‍♀️Контакты💁🏻‍♀️')
+        orders = types.KeyboardButton('🧳Заказы🧳')
+        language_button=types.KeyboardButton('Поменять язык 🇮🇱 🇬🇧 🇷🇺')
+        mainkeyboard.add(menubutton, basketbutton, aboutus, orders, language_button)
+        return mainkeyboard
+    if lang == 'HEB':
+        mainkeyboard=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+        menubutton = types.KeyboardButton ('🍴תפריט🍴') 
+        basketbutton = types.KeyboardButton('🛒סל קניות🛒')
+        aboutus = types.KeyboardButton('💁🏻‍♀️עלינו💁🏻‍♀️')
+        orders = types.KeyboardButton('🧳הזמנות🧳')
+        language_button=types.KeyboardButton('🇮🇱 🇬🇧 🇷🇺 שנה שפה')
+        mainkeyboard.add(basketbutton, menubutton, orders, aboutus, language_button)
+        return mainkeyboard
 
 #coctailmenu
-cocktailkeyboard=types.InlineKeyboardMarkup(row_width=1)
-sign_type=types.InlineKeyboardButton(text='🍹Signature Cocktails🍹', callback_data='Signature Cocktails')
-classic_type=types.InlineKeyboardButton(text='🍸Classic Coktails🍸',callback_data='Classic Coktails')
-g_t_type=types.InlineKeyboardButton(text='🍋Gin&Tonic🍋',callback_data='Gin&Tonic')
-spritzs_type=types.InlineKeyboardButton(text='🍾Aperol Spritz Twists🍊',callback_data='Spritz')
-negroni_type=types.InlineKeyboardButton(text='🥃Negroni Twists🍊',callback_data='Negronis')
-cocktailkeyboard.add(sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
+async def cocktail_type_keyboard(lang):
+    cocktailkeyboard=types.InlineKeyboardMarkup(row_width=1)
+    if lang=='ENG':
+        sign_type=types.InlineKeyboardButton(text='🍹Signature Cocktails🍹', callback_data='Signature Cocktails')
+        classic_type=types.InlineKeyboardButton(text='🍸Classic Coktails🍸',callback_data='Classic Coktails')
+        g_t_type=types.InlineKeyboardButton(text='🍋Gin&Tonic🍋',callback_data='Gin&Tonic')
+        spritzs_type=types.InlineKeyboardButton(text='🍾Aperol Spritz Twists🍊',callback_data='Spritz')
+        negroni_type=types.InlineKeyboardButton(text='🥃Negroni Twists🍊',callback_data='Negronis')
+        cocktailkeyboard.add(sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
+        return cocktailkeyboard
+
+    elif lang=='RUS':
+        sign_type=types.InlineKeyboardButton(text='🍹Авторские коктейли🍹', callback_data='Авторские коктейли')
+        classic_type=types.InlineKeyboardButton(text='🍸Классические коктейли🍸',callback_data='Классические коктейли')
+        g_t_type=types.InlineKeyboardButton(text='🍋Джин и тоник🍋',callback_data='Джин и тоник')
+        spritzs_type=types.InlineKeyboardButton(text='🍾Апероль спритц твисты🍊',callback_data='Апероль спритц твисты')
+        negroni_type=types.InlineKeyboardButton(text='🥃Негрони твисты🍊',callback_data='Негрони твисты')
+        cocktailkeyboard.add(sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
+        return cocktailkeyboard
+
+    if lang=='HEB':
+        sign_type=types.InlineKeyboardButton(text='🍹קוקטיילים הבית🍹', callback_data='קוקטיילים הבית')
+        classic_type=types.InlineKeyboardButton(text='🍸קוקטיילים קלאסיים🍸',callback_data='קוקטיילים קלאסיים')
+        g_t_type=types.InlineKeyboardButton(text="🍋ג'ין וטוניק🍋",callback_data="ג'ין וטוניק")
+        spritzs_type=types.InlineKeyboardButton(text='🍾אפרול שפריץ טוויסת🍊',callback_data='אפרול שפריץ טוויסת')
+        negroni_type=types.InlineKeyboardButton(text='🥃נגרוני טוויסת🍊',callback_data='נגרוני טוויסת')
+        cocktailkeyboard.add(sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
+        return cocktailkeyboard
 
 #order keyboard reply
-keyboard_for_order =types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2,one_time_keyboard=True) 
-correct = types.KeyboardButton ('✅Correct') 
-back_in_order = types.KeyboardButton('⬅️Back')
-cancel = types.KeyboardButton('⛔️Cancel')
-keyboard_for_order.add(correct,back_in_order,cancel)
+async def keyboard_for_order(lang):
+    keyboard_for_order=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2,one_time_keyboard=True) 
+    correct = types.KeyboardButton (lang_dict[f'order_correct_{lang}']) 
+    back_in_order=types.KeyboardButton(lang_dict[f'order_back_{lang}'])
+    cancel=types.KeyboardButton(lang_dict[f'order_cancel_{lang}'])
+    if lang=='HEB':
+        keyboard_for_order.add(back_in_order,correct,cancel)
+        return keyboard_for_order
+    else:
+        keyboard_for_order.add(correct,back_in_order,cancel)
+        return keyboard_for_order
 
 #send order keyboard
-last_keyboard=types.ReplyKeyboardMarkup(resize_keyboard=False, row_width=2,one_time_keyboard=True)
-make_order=types.KeyboardButton('✅Send Order')
-last_keyboard.add(make_order, back_in_order)
+async def send_order_keyboard(lang):
+    last_keyboard=types.ReplyKeyboardMarkup(resize_keyboard=False, row_width=2,one_time_keyboard=True)
+    make_order=types.KeyboardButton(lang_dict[f'send_order_{lang}'])
+    back_in_order=types.KeyboardButton(lang_dict[f'sand_order_back_{lang}'])
+    if lang=='HEB':
+        last_keyboard.add(back_in_order, make_order)
+        return last_keyboard
+    else:
+        last_keyboard.add(make_order, back_in_order)
+        return last_keyboard
+
 #-----------function for operation in menu-------------------------------------\
 #keyboard for coctails in menu
-async def keyboard(price05,price03,cocktail_name,tip):
+async def keyboard(price05,price03,cocktail_name,tip,lang):
     trade_keyboard=types.InlineKeyboardMarkup(row_width=2)
-    half_litr = types.InlineKeyboardButton (text=f'🛍Buy 0.5L\n {price05}₪', callback_data=f'0.5L {cocktail_name}')
-    thirt_litr = types.InlineKeyboardButton(text=f'🛍Buy 0.3L\n {price03}₪', callback_data=f'0.3L {cocktail_name}')
-    basket = types.InlineKeyboardButton(text='🛒Go to Card', callback_data='basket')
-    go_to_menu = types.InlineKeyboardButton(text='◀️Back', callback_data=f'{tip}')
-    trade_keyboard.add(half_litr, thirt_litr, basket)
+    text_half_l=lang_dict[f'trade_buy05_{lang}']
+    text_thirt_l=lang_dict[f'trade_buy03_{lang}']
+
+    half_litr=types.InlineKeyboardButton (text=f'{text_half_l}\n {price05}₪', callback_data=f'0.5L {cocktail_name}')
+    thirt_litr=types.InlineKeyboardButton(text=f'{text_thirt_l}\n {price03}₪', callback_data=f'0.3L {cocktail_name}')
+    basket=types.InlineKeyboardButton(text=lang_dict[f'trade_card_{lang}'], callback_data='basket')
+    go_to_menu=types.InlineKeyboardButton(text=lang_dict[f'trade_back_{lang}'], callback_data=f'{tip}')
+    if lang=='HEB':
+        trade_keyboard.add(thirt_litr, half_litr, basket)
+    else:
+        trade_keyboard.add(half_litr, thirt_litr, basket)       
     trade_keyboard.row(go_to_menu)
     return trade_keyboard
 
-async def create_keybord_for_coctails_in_type (tip,call):
+async def create_keybord_for_coctails_in_type (tip,call,lang):
     try:
         type_keyboard=types.InlineKeyboardMarkup(row_width=1)
         print(tip)
@@ -145,18 +387,21 @@ async def create_keybord_for_coctails_in_type (tip,call):
                     cocktail_type=cocktail['type']
                     cocktail_url=url_types[f'{cocktail_type}']
                     cocktail_description = cocktail['description']
-                    #text+=(f'\n*{cocktail_name}*  \n{cocktail_description}\n')
+                   
                     text=f'[{cocktail_type}]({cocktail_url})'  
                     button=types.InlineKeyboardButton(text=f'{cocktail_name}',callback_data=f'{cocktail_name}')
                     type_keyboard.add(button) 
-        main_menu=types.InlineKeyboardButton(text='◀️Main menu📜',callback_data='main')
+                    
+        main_menu=types.InlineKeyboardButton(text=lang_dict[f'cocktails_name_keyboard_{lang}'],callback_data='main')
         type_keyboard.add(main_menu)
         await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text, reply_markup=type_keyboard, parse_mode='Markdown')
-        #text=f'[{cocktail_type}](https://github.com/VicGjb/bot/blob/master/TestBotDeploy/Bot/for%20bot.jpg?raw=true)'
+    except NameError:# KeyError:  
+        await oops_message(chat_id=call.message.chat.id)
     except KeyError:
-        print('!!!!!!!!!!!!!!im in type cocktail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        await bot.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
-async def show_cocktail(call,tip):
+        await oops_message(chat_id=call.message.chat.id)
+
+
+async  def show_cocktail(call,tip):
     try:
         print('Показать коктейли')
         for cocktail in  users[f'{call.message.chat.id}_cocktail']:
@@ -171,7 +416,7 @@ async def show_cocktail(call,tip):
 
                     price05=cocktail['price05']
                     price03=cocktail['price03']
-                    trade_keyboard= await keyboard(price05,price03,cocktail_name,tip=tip)
+                    trade_keyboard= await keyboard(price05, price03, cocktail_name, tip=tip, lang=users[f'{call.message.chat.id}_lang'])
                     await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text, reply_markup=trade_keyboard,parse_mode='Markdown') 
     except KeyError:
         print('!!!!!!!!!!!!!!!!!!!!!Im in show cocktail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1')
@@ -193,38 +438,43 @@ async def cocktail_size(tip,call):
                         if name_h  in users[f'{call.message.chat.id}_basket'].rows.header:
                             users[f'{call.message.chat.id}_basket'].rows[name_h]['amount']+=1
                             users[f'{call.message.chat.id}_basket'].rows[name_h]['price']+=price_h
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name} is in the card') 
-
-                        else:          
+                            temp_lang=users[f'{call.message.chat.id}_lang']
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}']) 
+                        else:
+                            temp_lang=users[f'{call.message.chat.id}_lang']          
                             users[f'{call.message.chat.id}_basket'].rows.append([name_h,cocktail_photo,1,price_h],header=name_h)
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name} is in the card')      
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}'])      
                     except AttributeError:
                         print('!!!!!!!!AtE cocktail size!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-                        await bot.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
-                    except NameError:
-                        print('!!!!!!!!!!NE cocktail size!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-                        await bot.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+                        await oops_message(chat_id=call.message.chat.id)
+                    # except NameError:
+                    #     print('!!!!!!!!!!NE cocktail size!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                    #     await oops_message(chat_id=call.message.chat.id)
                 if call.data == name_t:
                     try:
                         if name_t  in users[f'{call.message.chat.id}_basket'].rows.header:
                             users[f'{call.message.chat.id}_basket'].rows[name_t]['amount']+=1
                             users[f'{call.message.chat.id}_basket'].rows[name_t]['price']+=price_t
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name} is in the card') 
-                        else:        
+                            temp_lang=users[f'{call.message.chat.id}_lang']
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}']) 
+                        else:
+                            temp_lang=users[f'{call.message.chat.id}_lang']        
                             users[f'{call.message.chat.id}_basket'].rows.append([name_t,cocktail_photo,1,price_t],header=name_t)
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name} is in the card') 
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}']) 
                     except AttributeError:
                         print('atribute error in cocktail size')
-                        await bot.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+                        await oops_message(chat_id=call.message.chat.id)
                     except KeyError:
                         print('name error in cocktail size')
-                        await bot.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+                        await oops_message(chat_id=call.message.chat.id)
     except KeyError:
         print('Im iin coktail size key err last one')
-        await bot.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+        await oops_message(chat_id=call.message.chat.id)
 #------------------------------funtion for operation with card--------------------------------------------------------\
 #keyboard for basket
-async def basket_test(count_items,showitem,total,item_price,total_item):
+async def basket_test(count_items,showitem,total,item_price,total_item,lang):
+
+    temp_make_order=lang_dict[f'basket_start_order_{lang}']
 
     basket_keyboard = types.InlineKeyboardMarkup(row_width=1)
     price_of_item= types.InlineKeyboardButton(text=f'{item_price} ₪ * {count_items}={total_item} ₪',callback_data ='nts')
@@ -232,20 +482,24 @@ async def basket_test(count_items,showitem,total,item_price,total_item):
     less_button= types.InlineKeyboardButton(text='➖', callback_data = 'less')
     count_items = types.InlineKeyboardButton(text=f'{count_items}', callback_data = 'nts')
     delete_button = types.InlineKeyboardButton(text='❌', callback_data = 'del')
-    next_button = types.InlineKeyboardButton(text='next ▶️', callback_data= 'next') 
-    back_button = types.InlineKeyboardButton(text='◀️prev.', callback_data = 'back')
+    next_button = types.InlineKeyboardButton(text=lang_dict[f'basket_next_{lang}'], callback_data= 'next') 
+    back_button = types.InlineKeyboardButton(text=lang_dict[f'basket_back_{lang}'], callback_data = 'back')
     showitem_button = types.InlineKeyboardButton(text=f'{showitem}', callback_data='nts')
-    start_order = types.InlineKeyboardButton(text=f'✅Make Order {total} ₪', callback_data='order')
-    back_to_menu = types.InlineKeyboardButton(text='🍸Continue Shopping', callback_data='main')
+    start_order = types.InlineKeyboardButton(text=f'{temp_make_order} {total} ₪', callback_data='order')
+    back_to_menu = types.InlineKeyboardButton(text=lang_dict[f'basket_back_menu_{lang}'], callback_data='main')
 
     basket_keyboard.add(price_of_item)
-    basket_keyboard.row(delete_button,less_button,count_items,more_button)
-    basket_keyboard.row(back_button, showitem_button, next_button)
+    if lang=='HEB':
+        basket_keyboard.row(more_button, count_items, less_button, delete_button)
+        basket_keyboard.row(next_button, showitem_button, back_button)
+    else:
+        basket_keyboard.row(delete_button,less_button,count_items,more_button)    
+        basket_keyboard.row(back_button, showitem_button, next_button)
     basket_keyboard.add(start_order,back_to_menu)
     return basket_keyboard
 
 #show basket from Reply keyboard
-async def basket_from_message (n, message):
+async def basket_from_message (n, message, lang):
     basketC=f'{message.chat.id}_basket'
     showitem=f'{n+1}/{len(users[basketC].rows)}'
     item=users[f'{message.chat.id}_basket'][n][0]
@@ -256,11 +510,11 @@ async def basket_from_message (n, message):
     text=f'*{name}*[_]({bas_url})'  
     item_price=users[f'{message.chat.id}_basket'].rows[item]['price']/count_items
     total_item = count_items*item_price
-    basket_keyboard= await basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
+    basket_keyboard= await basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item, lang=lang)
     await bot.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
    
 #show basket from inlain keyboard
-async def basket_from_call(n, item, call):
+async def basket_from_call(n, item, call, lang):
     basketC=f'{call.message.chat.id}_basket'
     showitem=f'{n+1}/{len(users[basketC].rows)}'
     total=sum(list(users[f'{call.message.chat.id}_basket'].columns['price']))
@@ -270,10 +524,10 @@ async def basket_from_call(n, item, call):
     text=f'*{name}*[_]({bas_url})' 
     item_price=users[f'{call.message.chat.id}_basket'].rows[item]['price']/count_items
     total_item = count_items*item_price
-    basket_keyboard=await basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
+    basket_keyboard=await basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item, lang=lang)
     await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
 
-async def basket_iter(n,call):
+async def basket_iter(n,call,lang):
     basketC=f'{call.message.chat.id}_basket'
     item=users[f'{call.message.chat.id}_basket'][n][0]
     showitem=f'{n+1}/{len(users[basketC].rows)}'
@@ -286,8 +540,8 @@ async def basket_iter(n,call):
     text=f'{name} [_]({bas_url})'
     item_price=users[f'{call.message.chat.id}_basket'].rows[item]['price']/count_items
     total_item = count_items*item_price
-    basket_keyboard=await basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item)
-
+    basket_keyboard=await basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item,lang=lang)
+    
     return await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,reply_markup=basket_keyboard,text=text, parse_mode='Markdown')
 
 #--------------Functions for custumer initialization---------------------------------------------------------------------------------------\
@@ -333,46 +587,91 @@ async def init_customer_from_message(message):
 async def welcome (message):
     #приветствие и основное меню внизу
     await bot.send_chat_action(message.chat.id, 'upload_photo')
-    img = open('out.jpg', 'rb')   
-    url='https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/126903084_166685105188559_8109647350154471887_o.jpg?_nc_cat=105&ccb=2&_nc_sid=e3f864&_nc_ohc=d9xEBNdQ7kMAX81gdwG&_nc_ht=scontent.ftlv1-1.fna&oh=5de60ff811edb764f388dfbffed63fad&oe=5FFA7B7B'
-    await bot.send_photo(message.chat.id, img, reply_markup=mainkeyboard)  
+    img = open('logo.jpg', 'rb')   
+   # url='https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/126903084_166685105188559_8109647350154471887_o.jpg?_nc_cat=105&ccb=2&_nc_sid=e3f864&_nc_ohc=d9xEBNdQ7kMAX81gdwG&_nc_ht=scontent.ftlv1-1.fna&oh=5de60ff811edb764f388dfbffed63fad&oe=5FFA7B7B'
+    await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
     await init_customer_from_message(message)
 
 #------------------comuticatiom by InlineKeyboard-----------------------------------------------------------------------------------\
 @client.callback_query_handler(lambda c: c.data)
 async def get_call (call: types.CallbackQuery):
+
+    if call.data=='ENG':
+        mainkeyboard=await main_keyboard_down(lang='ENG')
+        img_e=open('first_ENG.jpg','rb')
+        text="Welcome to the bot of CocktailExpress shop!\nWe're delivering craft cocktails to your homes.\nThe orders are taken every day till 17:00.\nDelivery will be made the same day from 20:00 to 23:00."
+        await bot.send_photo(chat_id=call.message.chat.id, photo=img_e, caption=text, reply_markup=mainkeyboard)
+        # await bot.send_message(chat_id=call.message.chat.id,reply_markup=mainkeyboard,
+        #                     text="Welcome to the bot of CocktailExpress shop!\nWe're delivering craft cocktails to your homes.\nThe orders are taken every day till 17:00.\nDelivery will be made the same day from 20:00 to 23:00.")
+        users[f'{call.message.chat.id}_lang']='ENG'
+
+    if call.data=='HEB':
+        mainkeyboard=await main_keyboard_down(lang='HEB')
+        img_h=open('first_HEB.jpg','rb')
+        text="ברוכה הבאה לחנות הבוט CocktailExpress!\nאנחנו עושים משלוחים של קראפט קוקטיילים\nטריים ומרעננים עד עליך.\nמקבלים הזמנות כל יום עד השעה 17:00 ההזמנה תגיעה\nבאותו היום ביין השעות 20:00-23:00."
+        await bot.send_photo(chat_id=call.message.chat.id, photo=img_h, caption=text, reply_markup=mainkeyboard)
+        users[f'{call.message.chat.id}_lang']='HEB'
+
+    if call.data=='RUS':
+        mainkeyboard=await main_keyboard_down(lang='RUS')
+        img_r=open('first_RUS.jpg','rb')
+        text="Вас приветсвует бот-магазин CocktailExpress!\nМы достовляем к вам свежие, крафтовые коктейли.\nЗаказы принимаеются каждый день до 17:00.\nДоставляем в тот же день с 20:00 до 23:00."
+        await bot.send_photo(chat_id=call.message.chat.id, photo=img_r, caption=text, reply_markup=mainkeyboard)
+        users[f'{call.message.chat.id}_lang']='RUS'
+#------------------------------------------------------------------------------------------------------------------
+
     if call.data =='menu':
-        await bot.send_message(chat_id=call.message.chat.id,reply_markup=cocktailkeyboard,
-                            text="We're happy to offer you this cocktails:")
+        temp_lang=users[f'{call.message.chat.id}_lang']
+        text=lang_dict[f'cocktail_type_message_{temp_lang}']
+        cocktailkeyboard=await cocktail_type_keyboard(lang=users[f'{call.message.chat.id}_lang'])
+        await bot.edit_message_text(call.message.chat.id, message_id=call.message.message.id, text=text, reply_markup=cocktailkeyboard)
+    
     if call.data=='main':
-        await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                            reply_markup=cocktailkeyboard,text="We're happy to offer you this cocktails:")
-   
+        try:
+            temp_lang=users[f'{call.message.chat.id}_lang']
+            text=lang_dict[f'cocktail_type_message_{temp_lang}']
+            cocktailkeyboard=await cocktail_type_keyboard(lang=users[f'{call.message.chat.id}_lang'])
+            #await bot.send_message(call.message.chat.id,text=text, reply_markup=cocktailkeyboard)
+            await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text, reply_markup=cocktailkeyboard)
+        except KeyError:
+            await oops_message(chat_id=call.message.chat.id)
     users[call.message.chat.id]=False
     for tip in type_cocktail:
         print(tip)
         if call.data==tip[0]:
-            await create_keybord_for_coctails_in_type(tip=tip[0], call=call)
-            users[f'{call.message.chat.id}_call']=call.data
-            users[call.message.chat.id]=True  
-    print(users[call.message.chat.id])         
-    if users[call.message.chat.id]==False:
-        print(f'{call.data} Я сноваа здесь')
-        try:  
-            await show_cocktail(call=call, tip=users[f'{call.message.chat.id}_call']) 
-            await cocktail_size(tip=users[f'{call.message.chat.id}_call'], call=call) 
-        except KeyError:
-            print('hey im key error in call about cocktail menu')
+            try:
+
+                await create_keybord_for_coctails_in_type(tip=tip[0], call=call, lang=users[f'{call.message.chat.id}_lang'])
+                users[f'{call.message.chat.id}_call']=call.data
+                users[call.message.chat.id]=True  
+            except KeyError:
+                await oops_message(chat_id=call.message.chat.id)
+
+    print(users[call.message.chat.id]) 
+    if f'{call.message.chat.id}_call' in users:
+
+        if users[call.message.chat.id]==False:
+            print(f'{call.data} Я сноваа здесь')
+            try:
+                # if f'{call.message.chat.id}_call' in users:
+                await show_cocktail(call=call, tip=users[f'{call.message.chat.id}_call']) 
+                await cocktail_size(tip=users[f'{call.message.chat.id}_call'], call=call)
+            except  KeyError:
+                print('hey im key error in call cocktail menu')
+    else:
+        pass
 #         #-----------------------Baskect-----------------------------------------------------------------------------------------------\
+    
     if call.data == 'basket':
         try:
             if len(users[f'{call.message.chat.id}_basket'].rows)==0:
-                await bot.send_message(call.message.chat.id, "The card is empty, let's choose your cocktails: /start")    
+                temp_lang=users[f'{call.message.chat.id}_lang']
+                await bot.send_message(call.message.chat.id, text=lang_dict[f'empty_card_{temp_lang}'])    
             else: 
                 global n
                 n=0
                 item=users[f'{call.message.chat.id}_basket'][n][0]
-                await basket_from_call(n=n, item=item, call=call)
+                await basket_from_call(n=n, item=item, call=call, lang=users[f'{call.message.chat.id}_lang'])
         except AttributeError:
             
             print('i am AtributeError im in basket call')    
@@ -382,20 +681,23 @@ async def get_call (call: types.CallbackQuery):
             n+=1
             if n>len(users[f'{call.message.chat.id}_basket'].rows)-1:
                 n-=1
-                await basket_iter(n=n,call=call)
+                await basket_iter(n=n,call=call, lang=users[f'{call.message.chat.id}_lang'])
             else:
-                await basket_iter(n=n,call=call)
+                await basket_iter(n=n,call=call, lang=users[f'{call.message.chat.id}_lang'])
         except NameError:
-            print('im Name error in next')     
-
+            print('im Name error in next')
+            if f'{call.message.chat.id}_call' in users:
+                pass
+            else:     
+                await oops_message(chat_id=call.message.chat.id)
     if call.data == 'back':  
         try:
             n=n-1
             if n<0:
                 n+=1
-                await basket_iter(n=n,call=call)
+                await basket_iter(n=n,call=call, lang=users[f'{call.message.chat.id}_lang'])
             else:
-                await basket_iter(n=n,call=call)      
+                await basket_iter(n=n,call=call, lang=users[f'{call.message.chat.id}_lang'])      
         except NameError:
             print('I am NemeError in back')
 
@@ -404,7 +706,7 @@ async def get_call (call: types.CallbackQuery):
             item=users[f'{call.message.chat.id}_basket'][n][0]
             users[f'{call.message.chat.id}_basket'].rows[item]['price']+=users[f'{call.message.chat.id}_basket'].rows[item]['price']/users[f'{call.message.chat.id}_basket'].rows[item]['amount']
             users[f'{call.message.chat.id}_basket'].rows[item]['amount']+=1
-            await basket_from_call(n=n, item=item, call=call)
+            await basket_from_call(n=n, item=item, call=call, lang=users[f'{call.message.chat.id}_lang'])
         except NameError:
             print('im Name Error in more')
 
@@ -417,7 +719,7 @@ async def get_call (call: types.CallbackQuery):
                 users[f'{call.message.chat.id}_basket'].rows[item]['amount']+=1
                 users[f'{call.message.chat.id}_basket'].rows[item]['price']+=price_item
             users[f'{call.message.chat.id}_basket'].rows[item]['price']-=price_item
-            await basket_from_call(n=n, item=item, call=call)   
+            await basket_from_call(n=n, item=item, call=call, lang=users[f'{call.message.chat.id}_lang'])   
         except NameError:
             print('im Name Error in less')
 
@@ -425,73 +727,81 @@ async def get_call (call: types.CallbackQuery):
         try:
             del users[f'{call.message.chat.id}_basket'].rows[n]
             if len(users[f'{call.message.chat.id}_basket'].rows)==0:
-                await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,reply_markup=cocktailkeyboard,text="Oops, something is wrong🤭 let's start over, press /start")
+                await oops_edit_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             else:
                 if n==len(users[f'{call.message.chat.id}_basket'].rows):
                     n-=1   
                 item=users[f'{call.message.chat.id}_basket'][n][0]
-                await basket_from_call(n=n, item=item, call=call)
-
+                await basket_from_call(n=n, item=item, call=call, lang=users[f'{call.message.chat.id}_lang'])
         except AttributeError:
             print('im Name Error in del')
 
     if call.data=='order':
         try:
-
+            temp_lang=users[f'{call.message.chat.id}_lang']
             name=users[f'{call.message.chat.id}_person'].columns['name'][f'{call.message.chat.id}']
             await bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.message_id,
-                        text='Add personal info')
-            await bot.send_message(chat_id=call.message.chat.id, text=f'What is your name?\nNow we know you as: {name}', reply_markup=keyboard_for_order)
+                        text=lang_dict[f'add_info_{temp_lang}'])
+            keyboard_order=await keyboard_for_order(lang=temp_lang)
+            await bot.send_message(chat_id=call.message.chat.id, text=lang_dict[f'ask_name_{temp_lang}']+f'{name}', reply_markup=keyboard_order)
             await MakeOrder.get_name.set()
         except NameError: #AttributeError:
-            await bot.send_message(call.message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+            await oops_message(chat_id=call.message.chat.id)
             print(' im name error in order call')
 
 # #---------------comutication by ReplyKeyboard------------------------------------------------------------------------------------------------------\
 @client.message_handler(content_types = ['text'])
 async def get_text(message):
-    if message.text=='🍴Menu🍴' or message.text=='🍴Вернуться🍴':# может пригодиться
-        await bot.send_message(message.chat.id,"We're happy to offer you this cocktails:", reply_markup= cocktailkeyboard)
+    temp_lang=users[f'{message.chat.id}_lang']
+    if message.text=='🍴Menu🍴' or message.text=='🍴Меню🍴' or message.text=='🍴תפריט🍴':
+        try:            
+            text=lang_dict[f'cocktail_type_message_{temp_lang}']
+            cocktailkeyboard=await cocktail_type_keyboard(lang=users[f'{message.chat.id}_lang'])
+            await bot.send_message(message.chat.id,text=text, reply_markup= cocktailkeyboard)
+        except KeyError:
+            await oops_message(chat_id=message.chat.id)
 
-
-    elif message.text == '🛒Card🛒':
-        try:  
+    elif message.text=='🛒Card🛒' or message.text=='🛒Корзина🛒' or message.text=='🛒סל קניות🛒':
+        try:           
             if len(users[f'{message.chat.id}_basket'].rows)==0:
-                await bot.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
+                await bot.send_message(message.chat.id, text=lang_dict[f'empty_card_{temp_lang}'])    
             else: 
                 global n
                 n=0
-                await basket_from_message(n=n,message=message)
+                await basket_from_message(n=n,message=message, lang=users[f'{message.chat.id}_lang'])
         except AttributeError:
             print('im AtrErorr in card by message')
-            await bot.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+            await oops_message(chat_id=message.chat.id)
         except NameError:
             print('im Name errorin card by message')
-            await bot.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")   
+            await oops_message(chat_id=message.chat.id,)  
         except KeyError:
             print('im KeyError in card by message')
-            await bot.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+            await oops_message(chat_id=message.chat.id)
 
 
-    elif message.text == '💁🏻‍♀️Info💁🏻‍♀️':
-        url='https://scontent.fhfa1-1.fna.fbcdn.net/v/t1.0-9/51087951_2681893448493125_7010877500414754816_o.jpg?_nc_cat=107&ccb=2&_nc_sid=174925&_nc_ohc=W5-onSfCwL4AX-gsWKY&_nc_ht=scontent.fhfa1-1.fna&oh=d41c099e79bb84248488f1466a085962&oe=600672E5'
-        chris= open('chris.jpg','wb')
-        chris.write(urllib.request.urlopen(url).read())
-        chris.close()
-        chris=open('chris.jpg','rb')
-        await bot.send_photo(message.chat.id, chris)
-        text="We're the team of professional bartenders, who will provide you the best drinks for your joy! \n*Contacts:*\n[Facebook](https://www.facebook.com/coctailexpresstlv)\n[Instagram](https://www.instagram.com/cocktailexpresstlv)\nPhone: 053-306-7303"
-        await bot.send_message(message.chat.id, text=text, parse_mode='Markdown',disable_web_page_preview=True)
+    elif message.text=='💁🏻‍♀️Info💁🏻‍♀️' or message.text=='💁🏻‍♀️Контакты💁🏻‍♀️' or message.text=='💁🏻‍♀️עלינו💁🏻‍♀️':
+        # # url='https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/51087951_2681893448493125_7010877500414754816_o.jpg?_nc_cat=107&ccb=2&_nc_sid=174925&_nc_ohc=Uz2V7AhAKHYAX9Aim7s&_nc_ht=scontent.ftlv1-1.fna&oh=bbfd3f8d62f3a8430b1d5cf45b3afaff&oe=602DFFE5'
+        # # chris= open('chris.jpg','wb')
+        # # chris.write(urllib.request.urlopen(url).read())
+        # chris.close()
+        try:
 
+            chris=open('chris.jpg','rb')
+            await bot.send_photo(message.chat.id, chris)
+            await bot.send_message(message.chat.id, text=lang_dict[f'info_{temp_lang}'], parse_mode='Markdown',disable_web_page_preview=True)
+        except KeyError:
+            await bot.send_message(message.chat.id, text="[Facebook](https://www.facebook.com/coctailexpresstlv)\n[Instagram](https://www.instagram.com/cocktailexpresstlv)\nPhone: 053-306-7303", parse_mode='Markdown',disable_web_page_preview=True)
 
-    elif message.text == '🧳Orders🧳':
+    elif message.text=='🧳Orders🧳' or message.text=='🧳Заказы🧳' or message.text=='🧳הזמנות🧳':
         try:
             text=''
             if len(users[f'{message.chat.id}_last_orders'])==0:
-                await bot.send_message(message.chat.id, text=f"You have no orders yet, it's time to order your first cocktail🍸 press /start",reply_markup=mainkeyboard)
+                mainkeyboard=await main_keyboard_down(lang=temp_lang)
+                await bot.send_message(message.chat.id, text=lang_dict[f'empty_order_{temp_lang}'],reply_markup=mainkeyboard)
             else:
                 if len(users[f'{message.chat.id}_last_orders'].rows) <=5:
-
+    
                     for i in range (len(users[f'{message.chat.id}_last_orders'].rows)):
                             time=users[f'{message.chat.id}_last_orders'].rows[i]['time']
                             order=users[f'{message.chat.id}_last_orders'].rows[i]['order']
@@ -501,102 +811,144 @@ async def get_text(message):
                             time=users[f'{message.chat.id}_last_orders'].rows[i]['time']
                             order=users[f'{message.chat.id}_last_orders'].rows[i]['order']
                             text=text + (f'{time} \n{order}\n--------------------\n')
-                await bot.send_message(message.chat.id, text=f'Your last orders:\n\n{text}\n',reply_markup=mainkeyboard) 
+                mainkeyboard=await main_keyboard_down(lang=temp_lang)
+
+                await bot.send_message(message.chat.id, text=lang_dict[f'history_orders_{temp_lang}']+f'{text}\n',reply_markup=mainkeyboard) 
         except KeyError:
             print('KeyError in orders') 
-            await bot.send_message(message.chat.id, text=f"You have no orders yet, it's time to order your first cocktail🍸 press /start") 
+            try:
+                await bot.send_message(message.chat.id, text=lang_dict[f'empty_orders_{temp_lang}']) 
+            except KeyError:
+                await oops_message(chat_id=message.chat.id)
+  
+    elif message.text=='Change language 🇮🇱 🇬🇧 🇷🇺' or message.text=='Поменять язык 🇮🇱 🇬🇧 🇷🇺' or message.text=='🇮🇱 🇬🇧 🇷🇺 שנה שפה':
+        
+        logo=open('logo.jpg','rb')        
+        await bot.send_photo(message.chat.id, logo, reply_markup=language_keyboard)
+
+
+
     else:
-        await bot.send_message(message.chat.id,'Press marked button\n or start over: /start', reply_markup=mainkeyboard)
+        try:
+            mainkeyboard=await main_keyboard_down(lang=temp_lang)
+            await bot.send_message(message.chat.id, text=lang_dict[f'else_text_{temp_lang}'], reply_markup=mainkeyboard)
+        except KeyError:
+            await oops_message(chat_id=message.chat.id)
+
 # #--------------Validation and order-------------------------------------------------------------------------------------------------
 
 @client.message_handler(state=MakeOrder.get_name, content_types=types.ContentTypes.TEXT)
 async def get_name(message, state:FSMContext):
     try:
-        if message.text == "✅Correct":
+        temp_lang=users[f'{message.chat.id}_lang']
+        if message.text == "✅Correct" or message.text=='✅Верно'  or message.text=='נכון✅':
             phone=users[f'{message.chat.id}_person'].columns['phone'][f'{message.chat.id}']
-            await bot.send_message(message.chat.id, text=f'Your phone number\nNow: {phone}',reply_markup=keyboard_for_order)
+            keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
+            temp_lang=users[f'{message.chat.id}_lang']
+            await bot.send_message(message.chat.id, text=lang_dict['ask_phone_'+users[f'{message.chat.id}_lang']]+f'{phone}', reply_markup=keyboard_order)
             await MakeOrder.get_phone.set()
         
-        elif message.text=='⬅️Back':
+        elif message.text=='⬅️Back' or message.text=='⬅️Назад' or message.text=='חזרה⬅️':
             await state.finish()
             if len(users[f'{message.chat.id}_basket'].rows)==0:
-                await bot.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
-            else: 
-                await bot.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
-                await basket_from_message(n=n,message=message)
+                await bot.send_message(message.chat.id, text=lang_dict[f'empty_card_{temp_lang}'])    
+            else:
+                mainkeyboard=await main_keyboard_down(lang=users[f'{message.chat.id}_lang']) 
+                await bot.send_message(message.chat.id, text=lang_dict[f'back_to_card_{temp_lang}'], reply_markup=mainkeyboard)
+                await basket_from_message(n=n, message=message, lang=users[f'{message.chat.id}_lang'])
         
-        elif message.text == '⛔️Cancel':
+        elif message.text == '⛔️Cancel' or message.text=='⛔️Отменить' or message.text=='ביטול⛔️':
             await state.finish()
             if len(users[f'{message.chat.id}_basket'].rows)==0:
-                await bot.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
+                await bot.send_message(message.chat.id, text=lang_dict[f'empty_card_{temp_lang}'])    
             else: 
-                await bot.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
-                await basket_from_message(n=n,message=message)
-            
+                mainkeyboard=await main_keyboard_down(lang=users[f'{message.chat.id}_lang'])
+                await bot.send_message(message.chat.id, text=lang_dict[f'back_to_card_{temp_lang}'], reply_markup=mainkeyboard)
+                await basket_from_message(n=n, message=message, lang=users[f'{message.chat.id}_lang'])
+        
+        elif message.text=='/start':
+            await bot.send_chat_action(message.chat.id, 'upload_photo')
+            img = open('out.jpg', 'rb')   
+            await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
+            await init_customer_from_message(message)
+            await state.finish()
+
         else:
             if message.text == None:
                 message.text='Name'
-                await bot.send_message(message.chat.id, text= 'Type your name')
+                await bot.send_message(message.chat.id, text=lang_dict[f'none_name_{temp_lang}'])
                 await MakeOrder.get_name.set()
-
             else:
-
                 users[f'{message.chat.id}_person'].rows[f'{message.chat.id}']['name']=f'{message.text}'
                 phone=users[f'{message.chat.id}_person'].columns['phone'][f'{message.chat.id}']
-                await bot.send_message(message.chat.id, text=f'Your phone number\nNow: {phone}',reply_markup=keyboard_for_order)
+                keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
+                await bot.send_message(message.chat.id, text=lang_dict[f'ask_phone_{temp_lang}']+f'{phone}',reply_markup=keyboard_order)
                 await MakeOrder.get_phone.set()
 
     except AttributeError: #NameError: #AttributeError:
             print('AtrError in get_name')
-            await bot.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+            oops_message(chat_id= message.chat.id)
 
 @client.message_handler(state=MakeOrder.get_phone, content_types=types.ContentTypes.TEXT)   
 async def get_phone (message, state:FSMContext):
     try:
-        if message.text == "✅Correct":
+        temp_lang=users[f'{message.chat.id}_lang']
+        if message.text == '✅Correct' or message.text=='✅Верно'  or message.text=='נכון✅':
             if users[f'{message.chat.id}_person'].columns['phone'][f'{message.chat.id}'].isdigit():
 
                 addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
-                await bot.send_message(message.chat.id, text=f'Your address:\nNow: {addres}',reply_markup=keyboard_for_order)
+                keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
+                await bot.send_message(message.chat.id, text=lang_dict[f'ask_address_{temp_lang}']+f'{addres}',reply_markup=keyboard_order)
                 await MakeOrder.get_addres.set()
             else:
-                await bot.send_message(message.chat.id, text= 'Type your phone number (format 0500000000)')
+                await bot.send_message(message.chat.id, text=lang_dict[f'non_phone_{temp_lang}'])
                 await MakeOrder.get_phone.set()
         
-        elif message.text=='⬅️Back':
+        elif message.text=='⬅️Back' or message.text=='⬅️Назад' or message.text=='חזרה⬅️':
             name=users[f'{message.chat.id}_person'].columns['name'][f'{message.chat.id}']
-            await bot.send_message(message.chat.id, text=f'What is your name?\nNow we know you as: {name}',reply_markup=keyboard_for_order)
+            keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
+            await bot.send_message(message.chat.id, text=lang_dict[f'ask_name_{temp_lang}']+f'{name}', reply_markup=keyboard_order)
             await MakeOrder.get_name.set()
         
-        elif message.text == '⛔️Cancel':
+        elif message.text == '⛔️Cancel' or message.text=='⛔️Отменить' or message.text=='ביטול⛔️':
             await state.finish()
             if len(users[f'{message.chat.id}_basket'].rows)==0:
-                await bot.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
+                await bot.send_message(message.chat.id, text=lang_dict[f'empty_card_{temp_lang}'])    
             else: 
-                await bot.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
-                await basket_from_message(n=n,message=message)
-           
+                mainkeyboard=await main_keyboard_down(lang=users[f'{message.chat.id}_lang'])
+                await bot.send_message(message.chat.id, text=lang_dict[f'back_to_card_{temp_lang}'], reply_markup=mainkeyboard)
+                await basket_from_message(n=n, message=message, lang=users[f'{message.chat.id}_lang'])
+        
+        elif message.text=='/start':
+            await bot.send_chat_action(message.chat.id, 'upload_photo')
+            img = open('out.jpg', 'rb')   
+            await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
+            await init_customer_from_message(message)
+            await state.finish()
+
         else:
             if message.text == None:
-                await bot.send_message(message.chat.id, text= 'Type your phone number (format 0500000000)')
+                await bot.send_message(message.chat.id, text=lang_dict[f'none_phone_{temp_lang}'])
                 await MakeOrder.get_phone.set() 
             elif message.text.isdigit():
                 users[f'{message.chat.id}_person'].rows[f'{message.chat.id}']['phone']=message.text
 
                 addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
-                await bot.send_message(message.chat.id, text=f'Your address:\nNow: {addres}',reply_markup=keyboard_for_order)
+                keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
+                await bot.send_message(message.chat.id, text=lang_dict[f'ask_address_{temp_lang}']+f'{addres}',reply_markup=keyboard_order)
                 await MakeOrder.get_addres.set()             
             else:
-                await bot.send_message(message.chat.id, text= 'Type your phone number (format 0500000000)')
+                await bot.send_message(message.chat.id, text=lang_dict[f'non_phone_{temp_lang}'])
                 await MakeOrder.get_phone.set()
     except AttributeError:
             print('im AttrError in get_phone')
-            await bot.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+            oops_message(chat_id=call.message.chat.id)
 
 @client.message_handler(state=MakeOrder.get_addres, content_types=types.ContentTypes.TEXT)
 async def get_addres(message, state:FSMContext):
     try:
-        if message.text == "✅Correct":
+        temp_lang=users[f'{message.chat.id}_lang']
+        if message.text == '✅Correct' or message.text=='✅Верно'  or message.text=='נכון✅':
             order=BeautifulTable()
             order.columns.header=['Name','Amount','Price']
             cocktails=len(users[f'{message.chat.id}_basket'].rows)
@@ -611,27 +963,37 @@ async def get_addres(message, state:FSMContext):
             addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
             order.set_style(BeautifulTable.STYLE_COMPACT)
             total=(sum(list(order.columns['Price'])))
-            text=f'Your order:\nName:{name}\nPhone:{phone}\nAddress:{addres}\nTotal:{total}'
+            last_keyboard=await send_order_keyboard(lang=users[f'{message.chat.id}_lang'])
+            text=lang_dict[f'send_order_name_{temp_lang}']+f'{name}'+lang_dict[f'send_order_phone_{temp_lang}']+f'{phone}'+lang_dict[f'send_order_address_{temp_lang}']+f'{addres}'+lang_dict[f'send_order_total_{temp_lang}']+f'{total}'
             await bot.send_message(message.chat.id, text=text, reply_markup=last_keyboard)
             await MakeOrder.make_order.set()   
         
-        elif message.text=='⬅️Back':
+        elif message.text=='⬅️Back' or message.text=='⬅️Назад' or message.text=='חזרה⬅️':
             phone=users[f'{message.chat.id}_person'].columns['phone'][f'{message.chat.id}']
-            await bot.send_message(message.chat.id, text=f'Your phone number\nNow: {phone}',reply_markup=keyboard_for_order)
+            keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
+            await bot.send_message(message.chat.id, text=lang_dict[f'ask_phone_{temp_lang}']+f'{phone}',reply_markup=keyboard_order)
             await MakeOrder.get_phone.set()
         
-        elif message.text == '⛔️Cancel':
+        elif message.text == '⛔️Cancel' or message.text=='⛔️Отменить' or message.text=='ביטול⛔️':
             await state.finish()
             if len(users[f'{message.chat.id}_basket'].rows)==0:
-                await bot.send_message(message.chat.id,"The card is empty, let's choose your cocktails: /start")    
+                await bot.send_message(message.chat.id, text=lang_dict[f'empty_card_{temp_lang}'])    
             else: 
-                await bot.send_message(message.chat.id, text= 'back to cart',reply_markup=mainkeyboard)
-                await basket_from_message(n=n,message=message)     
-            
+                mainkeyboard=await main_keyboard_down(lang=users[f'{message.chat.id}_lang'])
+                await bot.send_message(message.chat.id, text=lang_dict[f'back_to_card_{temp_lang}'], reply_markup=mainkeyboard)
+                await basket_from_message(n=n, message=message, lang=users[f'{message.chat.id}_lang'])     
+
+        elif message.text=='/start':
+            await bot.send_chat_action(message.chat.id, 'upload_photo')
+            img = open('out.jpg', 'rb')   
+            await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
+            await init_customer_from_message(message)
+            await state.finish()
+
         else:
             if message.text == None:
                 message.text='addres'
-                await bot.send_message(message.chat.id, text= 'Type address:')
+                await bot.send_message(message.chat.id, text=lang_dict[f'non_address_{temp_lang}'] )
                 await bot.register_next_step_handler(message, get_addres)
             else:
              
@@ -649,19 +1011,22 @@ async def get_addres(message, state:FSMContext):
                 addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
                 order.set_style(BeautifulTable.STYLE_COMPACT)
                 total=(sum(list(order.columns['Price'])))
-                text=f'Your order:\nName:{name}\nPhone:{phone}\nAddress:{addres}\nTotal:{total}'
+                text=lang_dict[f'send_order_name_{temp_lang}']+f'{name}'+lang_dict[f'send_order_phone_{temp_lang}']+f'{phone}'+lang_dict[f'send_order_address_{temp_lang}']+f'{addres}'+lang_dict[f'send_order_total_{temp_lang}']+f'{total}'
+                #text=f'Your order:\nName: {name}\nPhone:{phone}\nAddress:{addres}\nTotal:{total}'
+                print(text)
+                last_keyboard=await send_order_keyboard(lang=users[f'{message.chat.id}_lang'])
                 await bot.send_message(message.chat.id, text=text, reply_markup=last_keyboard)
                 await MakeOrder.make_order.set()
     except AttributeError:
         print('AttError get_address')
-        await bot.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+        oops_message(chat_id=call.message.chat.id)
 
 @client.message_handler(state=MakeOrder.make_order, content_types=types.ContentTypes.TEXT)
 async def send_order(message, state:FSMContext):
     await state.finish()
     try:
-
-        if message.text == '✅Send Order':     
+        temp_lang=users[f'{message.chat.id}_lang']
+        if message.text == '✅Send Order' or message.text=='✅Заказать' or message.text=='לעשות הזמנה✅':     
             order=BeautifulTable()
             order.columns.header=['Name','Amount','Price']
             cocktails=len(users[f'{message.chat.id}_basket'].rows)
@@ -677,8 +1042,9 @@ async def send_order(message, state:FSMContext):
             addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
             order.set_style(BeautifulTable.STYLE_COMPACT)
             total=(sum(list(order.columns['Price'])))
-            text=f'Order:\nName:{name}\nPhone:{phone}\nAddress:{addres}\nTotal:{total}\n'
-            await bot.send_message(message.chat.id, text='Thank you for your order!\nThe package will be delivered today from 20:00 to 23:00', reply_markup=mainkeyboard)
+            text=lang_dict[f'send_order_name_{temp_lang}']+f'{name}'+lang_dict[f'send_order_phone_{temp_lang}']+f'{phone}'+lang_dict[f'send_order_address_{temp_lang}']+f'{addres}'+lang_dict[f'send_order_total_{temp_lang}']+f'{total}'
+            mainkeyboard=await main_keyboard_down(lang=users[f'{message.chat.id}_lang'])
+            await bot.send_message(message.chat.id, text=lang_dict[f'tnx_{temp_lang}'], reply_markup=mainkeyboard)
             await bot.send_message(197634497, text=f'новый заказ:\n{text}\nзаказали\n{order}')
           
             print('im finish!!!!!!!!!!!!!!')
@@ -692,18 +1058,28 @@ async def send_order(message, state:FSMContext):
         
             print('Now im realy finish!!!!!!')
 
-        elif message.text == '⬅️Back': 
+        elif message.text == '⬅️Back' or message.text=='⬅️Назад' or message.text=='חזרה⬅️':
             addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
-            await bot.send_message(message.chat.id, text=f'Your address:\nNow: {addres}',reply_markup=keyboard_for_order)
+            keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
+            await bot.send_message(message.chat.id, text=lang_dict[f'ask_address_{temp_lang}']+f'{addres}',reply_markup=keyboard_order)
             await MakeOrder.get_addres.set()
 
+
+        elif message.text=='/start':
+            await bot.send_chat_action(message.chat.id, 'upload_photo')
+            img = open('out.jpg', 'rb')   
+            await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
+            await init_customer_from_message(message)
+            await state.finish()
+
         else:
-            await bot.send_message(message.chat.id, text='Press one of the buttons below', reply_markup=last_keyboard)
+            last_keyboard=await send_order_keyboard(lang=users[f'{message.chat.id}_lang'])
+            await bot.send_message(message.chat.id, text=lang_dict[f'send_order_else_{temp_lang}'], reply_markup=last_keyboard)
             await MakeOrder.make_order.set()
         
     except AttributeError:#NameError: 
         print('AttrErr Send_order')
-        await bot.send_message(message.chat.id, text= "Oops, something is wrong🤭 let's start over, press /start")
+        oops_message(chat_id=message.chat.id)
 
 #  #-------------------Protection from stupid messages---------------------------------------------------------------------------------   
 @client.message_handler(content_types = ['voice'])
@@ -711,10 +1087,12 @@ async def get_audio(message):
     await bot.send_chat_action(message.chat.id, 'upload_voice')
     aud = open('reqe.ogg', 'rb')   
     await bot.send_voice(chat_id=message.chat.id, voice=aud) 
+    mainkeyboard=await main_keyboard_down(lang=users[f'{message.chat.id}_lang'])
     await bot.send_message(message.chat.id, text='You have a pleasant voice.\nNow press here /start', reply_markup=mainkeyboard)
 
 @client.message_handler(content_types = ['photo'])
 async def get_photo(message):
+    mainkeyboard=await main_keyboard_down(lang=users[f'{message.chat.id}_lang'])
     await bot.send_message(message.chat.id, text="Look what I've got", reply_markup=mainkeyboard)
     await bot.send_chat_action(message.chat.id, 'upload_voice')
     ph = open('siski1.jpg', 'rb')   
