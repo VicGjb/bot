@@ -608,7 +608,7 @@ async def get_call (call: types.CallbackQuery):
     if call.data=='HEB':
         mainkeyboard=await main_keyboard_down(lang='HEB')
         img_h=open('first_HEB.jpg','rb')
-        text="ברוכה הבאה לחנות הבוט CocktailExpress!\nאנחנו עושים משלוחים של קראפט קוקטיילים\nטריים ומרעננים עד עליך.\nמקבלים הזמנות כל יום עד השעה 17:00 ההזמנה תגיעה\nבאותו היום ביין השעות 20:00-23:00."
+        text="ברוכה הבאה לחנות הבוט CocktailExpress!\nאנחנו עושים משלוחים של קראפט קוקטיילים\nטריים ומרעננים עד עליך.\nמקבלים הזמנות כל יום עד השעה 17:00 ההזמנה תגיע\nבאותו היום בין השעות 20:00-23:00."
         await bot.send_photo(chat_id=call.message.chat.id, photo=img_h, caption=text, reply_markup=mainkeyboard)
         users[f'{call.message.chat.id}_lang']='HEB'
 
