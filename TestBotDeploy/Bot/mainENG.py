@@ -826,8 +826,6 @@ async def get_text(message):
         logo=open('logo.jpg','rb')        
         await bot.send_photo(message.chat.id, logo, reply_markup=language_keyboard)
 
-
-
     else:
         try:
             mainkeyboard=await main_keyboard_down(lang=temp_lang)
@@ -926,7 +924,7 @@ async def get_phone (message, state:FSMContext):
         
         elif message.text=='/start':
             await bot.send_chat_action(message.chat.id, 'upload_photo')
-            img = open('out.jpg', 'rb')   
+            img = open('logo.jpg', 'rb')   
             await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
             await init_customer_from_message(message)
             await state.finish()
@@ -990,7 +988,7 @@ async def get_addres(message, state:FSMContext):
 
         elif message.text=='/start':
             await bot.send_chat_action(message.chat.id, 'upload_photo')
-            img = open('out.jpg', 'rb')   
+            img = open('logo.jpg', 'rb')   
             await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
             await init_customer_from_message(message)
             await state.finish()
@@ -1072,7 +1070,7 @@ async def send_order(message, state:FSMContext):
 
         elif message.text=='/start':
             await bot.send_chat_action(message.chat.id, 'upload_photo')
-            img = open('out.jpg', 'rb')   
+            img = open('logo.jpg', 'rb')   
             await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
             await init_customer_from_message(message)
             await state.finish()
