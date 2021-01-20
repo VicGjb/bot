@@ -867,7 +867,7 @@ async def get_name(message, state:FSMContext):
         
         elif message.text=='/start':
             await bot.send_chat_action(message.chat.id, 'upload_photo')
-            img = open('out.jpg', 'rb')   
+            img = open('logo.jpg', 'rb')   
             await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
             await init_customer_from_message(message)
             await state.finish()
