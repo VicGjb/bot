@@ -78,11 +78,11 @@ for order in temp_all_orders:
     all_orders.rows.append(order,header=f'{order[0]}')
 
 url_types={
-           'Signature Cocktails':'https://github.com/VicGjb/bot/blob/master/Signature%20cocktail.jpg?raw=true',
-           'Classic Coktails':'https://github.com/VicGjb/bot/blob/master/classic%20cocktail.jpg?raw=true',
-           'Gin&Tonic':'https://github.com/VicGjb/bot/blob/master/Gin&tonic.jpg?raw=true',
-           'Spritz':'https://github.com/VicGjb/bot/blob/master/Aperol.jpg?raw=true',
-           'Negronis':'https://github.com/VicGjb/bot/blob/master/negroni.jpg?raw=true',
+           'Signature Cocktails':'https://github.com/VicGjb/testbot/blob/main/sing_ENG.jpg?raw=true',
+           'Classic Coktails':'https://github.com/VicGjb/testbot/blob/main/classic_ENG.jpg?raw=true',
+           'Gin&Tonic':'https://github.com/VicGjb/testbot/blob/main/g&t_ENG.jpg?raw=true',
+           'Spritz':'https://github.com/VicGjb/testbot/blob/main/Aperol_ENG.jpg?raw=true',
+           'Negronis':'https://github.com/VicGjb/testbot/blob/main/negroni_ENG.jpg?raw=true',
            
            'Авторские коктейли':'https://github.com/VicGjb/testbot/blob/main/sign_RUS.jpg?raw=true',
            'Классические коктейли':'https://github.com/VicGjb/testbot/blob/main/classic_RUS.jpg?raw=true',
@@ -96,7 +96,12 @@ url_types={
            'אפרול שפריץ טוויסת':'https://github.com/VicGjb/testbot/blob/main/aperol_HEBjpg.jpg?raw=true',
            'נגרוני טוויסת':'https://github.com/VicGjb/testbot/blob/main/negroni_HEB.jpg?raw=true',
 
-           'logo':'https://github.com/VicGjb/testbot/blob/main/LOGO%20MADE%20BY%20TEL.jpg?raw=true'
+           'logo':'https://github.com/VicGjb/testbot/blob/main/LOGO%20MADE%20BY%20TEL.jpg?raw=true',
+           
+           'down_keyboard_ENG':'https://github.com/VicGjb/testbot/blob/main/down_keyboard_ENG.jpg?raw=true',
+           'down_keyboard_HEB':'https://github.com/VicGjb/testbot/blob/main/down_keyboard_HEB.jpg?raw=true',
+           'down_keyboard_RUS':'https://github.com/VicGjb/testbot/blob/main/down_keyboard_RUS.jpg?raw=true'
+           
            }
 
 global lang_dict
@@ -104,7 +109,8 @@ lang_dict={
             'oops_ENG':"Oops, something is wrong🤭 let's start over, press /start",
             'oops_HEB':'Что-то пошло не так,🤭 cose u fuckin жид/start',
             'oops_RUS':'Что-то пошло не так,🤭 начнем с начала, нажмите /start',
-            
+
+
             'cocktail_type_message_ENG':"We're happy to offer you this cocktails:",
             'cocktail_type_message_HEB':"נשמח להציע לך  את סוגי המשקאות הבאים:",
             'cocktail_type_message_RUS':"Рады предложить вам следующие виды напитков:",
@@ -120,7 +126,15 @@ lang_dict={
             'empty_orders_ENG':"You have no orders yet, it's time to order your first cocktail🍸 press /start",
             'empty_orders_HEB':' אין לך הזמנות,זה הזמן לעשות את ההזמנה הראשונה שלך🍸 תבחר בתפריט למטה או תלחץ כאן /start',
             'empty_orders_RUS':'У вас пока нет закзав, самое время сделать ваш первый🍸 выберете меню внизу или нажмите /start',
-            
+
+            'empty_card_call_ENG':"The card is empty, let's choose your cocktails.",
+            'empty_card_call_HEB':'הסל ריק, הגיע הזמן לבחור משהו.',
+            'empty_card_call_RUS':'Корзина пуста, самое время что-нибуть выбрать.',
+
+            'purchase_ENG':'⬇️   Buy   ⬇️',
+            'purchase_HEB':'⬇️   לקניה   ⬇️',
+            'purchase_RUS':'⬇️   Купить   ⬇️',
+
             'history_orders_ENG':'Your last orders:\n\n',
             'history_orders_HEB':'\nההזמנות האחרונות שלך:\n\n',
             'history_orders_RUS':'Ваши последние заказы:\n\n',
@@ -210,21 +224,21 @@ lang_dict={
             'sand_order_back_HEB':'חזרה⬅️',
             'sand_order_back_RUS':'⬅️Назад',
 #-------------------------------------------
-            'trade_buy05_ENG':'🛍Buy 0.5L',
-            'trade_buy05_HEB':'לקניה 0.5ל🛍',
-            'trade_buy05_RUS':'🛍Купить 0.5L',
+            'trade_buy05_ENG':'🛍0.5L',
+            'trade_buy05_HEB':'0.5ל🛍',
+            'trade_buy05_RUS':'🛍0.5L',
 
-            'trade_buy03_ENG':'🛍Buy 0.3L',
-            'trade_buy03_HEB':'לקניה 0.3ל🛍',
-            'trade_buy03_RUS':'🛍Купить 0.3L',
+            'trade_buy03_ENG':'🛍0.3L',
+            'trade_buy03_HEB':'0.3ל🛍',
+            'trade_buy03_RUS':'🛍0.3L',
 
             'trade_card_ENG':'🛒Go to Card',
             'trade_card_HEB':'לסל🛒',
-            'trade_card_RUS':'🛒В корзину',
+            'trade_card_RUS':'🛒Перейти в корзину',
 
             'trade_back_ENG':'◀️Back',
             'trade_back_HEB':'חזרה▶️',
-            'trade_back_RUS':'⬅️Назад',
+            'trade_back_RUS':'⬅️Назад в меню',
 #-----------------------------basket---------------------------------------
             'basket_next_ENG':'next ▶️',
             'basket_next_HEB':'◀️הבא',
@@ -266,9 +280,9 @@ language_keyboard.add(eng_language, rus_language, heb_language)
 async def oops_message(chat_id):
     await bot.send_message(chat_id, text=lang_dict[f'oops_ENG'])
 
-async def oops_edit_message(chat_id, message_id):
-    cocktailkayboard=await cocktail_type_keyboard(lang='ENG')
-    await bot.edit_message_text(chat_id=chat_id, message_id=message_id,reply_markup=cocktailkeyboard,text=lang_dict[f'oops_ENG'])
+async def oops_edit_message(chat_id, message_id, lang):
+    cocktailkeyboard=await cocktail_type_keyboard(lang='ENG')
+    await bot.edit_message_text(chat_id=chat_id, message_id=message_id, reply_markup=cocktailkeyboard,text=lang_dict[f'cocktail_type_message_{lang}'])
 
 #maine keyboard reply
 async def main_keyboard_down(lang):
@@ -309,7 +323,7 @@ async def cocktail_type_keyboard(lang):
         g_t_type=types.InlineKeyboardButton(text='🍋Gin&Tonic🍋',callback_data='Gin&Tonic')
         spritzs_type=types.InlineKeyboardButton(text='🍾Aperol Spritz Twists🍊',callback_data='Spritz')
         negroni_type=types.InlineKeyboardButton(text='🥃Negroni Twists🍊',callback_data='Negronis')
-        cocktailkeyboard.add(sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
+        cocktailkeyboard.add(spritzs_type, g_t_type, classic_type, sign_type, negroni_type)
         return cocktailkeyboard
 
     elif lang=='RUS':
@@ -318,7 +332,7 @@ async def cocktail_type_keyboard(lang):
         g_t_type=types.InlineKeyboardButton(text='🍋Джин и тоник🍋',callback_data='Джин и тоник')
         spritzs_type=types.InlineKeyboardButton(text='🍾Апероль спритц твисты🍊',callback_data='Апероль спритц твисты')
         negroni_type=types.InlineKeyboardButton(text='🥃Негрони твисты🍊',callback_data='Негрони твисты')
-        cocktailkeyboard.add(sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
+        cocktailkeyboard.add(spritzs_type, g_t_type, classic_type, sign_type, negroni_type)
         return cocktailkeyboard
 
     if lang=='HEB':
@@ -327,12 +341,12 @@ async def cocktail_type_keyboard(lang):
         g_t_type=types.InlineKeyboardButton(text="🍋ג'ין וטוניק🍋",callback_data="ג'ין וטוניק")
         spritzs_type=types.InlineKeyboardButton(text='🍾אפרול שפריץ טוויסת🍊',callback_data='אפרול שפריץ טוויסת')
         negroni_type=types.InlineKeyboardButton(text='🥃נגרוני טוויסת🍊',callback_data='נגרוני טוויסת')
-        cocktailkeyboard.add(sign_type, classic_type, g_t_type, spritzs_type, negroni_type)
+        cocktailkeyboard.add(spritzs_type, g_t_type, classic_type, sign_type, negroni_type)
         return cocktailkeyboard
 
 #order keyboard reply
 async def keyboard_for_order(lang):
-    keyboard_for_order=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2,one_time_keyboard=True) 
+    keyboard_for_order=types.ReplyKeyboardMarkup(resize_keyboard=False, row_width=2,one_time_keyboard=True) 
     correct = types.KeyboardButton (lang_dict[f'order_correct_{lang}']) 
     back_in_order=types.KeyboardButton(lang_dict[f'order_back_{lang}'])
     cancel=types.KeyboardButton(lang_dict[f'order_cancel_{lang}'])
@@ -362,13 +376,16 @@ async def keyboard(price05,price03,cocktail_name,tip,lang):
     text_half_l=lang_dict[f'trade_buy05_{lang}']
     text_thirt_l=lang_dict[f'trade_buy03_{lang}']
 
+    text_for_purchase=types.InlineKeyboardButton (text=lang_dict[f'purchase_{lang}'], callback_data='nts')
     half_litr=types.InlineKeyboardButton (text=f'{text_half_l}\n {price05}₪', callback_data=f'0.5L {cocktail_name}')
     thirt_litr=types.InlineKeyboardButton(text=f'{text_thirt_l}\n {price03}₪', callback_data=f'0.3L {cocktail_name}')
     basket=types.InlineKeyboardButton(text=lang_dict[f'trade_card_{lang}'], callback_data='basket')
     go_to_menu=types.InlineKeyboardButton(text=lang_dict[f'trade_back_{lang}'], callback_data=f'{tip}')
     if lang=='HEB':
+        trade_keyboard.row(text_for_purchase)
         trade_keyboard.add(thirt_litr, half_litr, basket)
     else:
+        trade_keyboard.row(text_for_purchase)  
         trade_keyboard.add(half_litr, thirt_litr, basket)       
     trade_keyboard.row(go_to_menu)
     return trade_keyboard
@@ -666,7 +683,7 @@ async def get_call (call: types.CallbackQuery):
         try:
             if len(users[f'{call.message.chat.id}_basket'].rows)==0:
                 temp_lang=users[f'{call.message.chat.id}_lang']
-                await bot.send_message(call.message.chat.id, text=lang_dict[f'empty_card_{temp_lang}'])    
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=lang_dict[f'empty_card_call_{temp_lang}'])   
             else: 
                 global n
                 n=0
@@ -727,7 +744,7 @@ async def get_call (call: types.CallbackQuery):
         try:
             del users[f'{call.message.chat.id}_basket'].rows[n]
             if len(users[f'{call.message.chat.id}_basket'].rows)==0:
-                await oops_edit_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+                await oops_edit_message(chat_id=call.message.chat.id, message_id=call.message.message_id, lang=users[f'{call.message.chat.id}_lang'])
             else:
                 if n==len(users[f'{call.message.chat.id}_basket'].rows):
                     n-=1   
@@ -739,13 +756,16 @@ async def get_call (call: types.CallbackQuery):
     if call.data=='order':
         try:
             temp_lang=users[f'{call.message.chat.id}_lang']
+            url=url_types[f'down_keyboard_{temp_lang}']
+            temp_add_info=lang_dict[f'add_info_{temp_lang}']
+            text=f'[{temp_add_info}]({url})'
             name=users[f'{call.message.chat.id}_person'].columns['name'][f'{call.message.chat.id}']
             await bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.message_id,
-                        text=lang_dict[f'add_info_{temp_lang}'])
+                        text=text, parse_mode="MarKdown")
             keyboard_order=await keyboard_for_order(lang=temp_lang)
             await bot.send_message(chat_id=call.message.chat.id, text=lang_dict[f'ask_name_{temp_lang}']+f'{name}', reply_markup=keyboard_order)
             await MakeOrder.get_name.set()
-        except NameError: #AttributeError:
+        except NameError:#AttributeError:#NameError: #AttributeError:
             await oops_message(chat_id=call.message.chat.id)
             print(' im name error in order call')
 
@@ -825,6 +845,8 @@ async def get_text(message):
         
         logo=open('logo.jpg','rb')        
         await bot.send_photo(message.chat.id, logo, reply_markup=language_keyboard)
+
+
 
     else:
         try:
@@ -1103,4 +1125,3 @@ async def get_photo(message):
 
 executor.start_polling(client)
  
-# if __name__ =="__main__":
