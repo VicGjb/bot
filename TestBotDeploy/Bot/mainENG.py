@@ -236,8 +236,8 @@ lang_dict={
             'trade_card_HEB':'לסל🛒',
             'trade_card_RUS':'🛒Перейти в корзину',
 
-            'trade_back_ENG':'◀️Back',
-            'trade_back_HEB':'חזרה▶️',
+            'trade_back_ENG':'◀️Back to menu',
+            'trade_back_HEB':'חזרה ל תפריט▶️',
             'trade_back_RUS':'⬅️Назад в меню',
 #-----------------------------basket---------------------------------------
             'basket_next_ENG':'next ▶️',
