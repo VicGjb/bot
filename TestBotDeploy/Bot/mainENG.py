@@ -107,7 +107,7 @@ url_types={
 global lang_dict
 lang_dict={
             'oops_ENG':"Oops, something is wrong🤭 let's start over, press /start",
-            'oops_HEB':'Что-то пошло не так,🤭 cose u fuckin жид/start',
+            'oops_HEB':'\start אופס, משהוא השתבש 🤭 בוא נתחיל שוב מהתחלה, תלחץ',
             'oops_RUS':'Что-то пошло не так,🤭 начнем с начала, нажмите /start',
 
 
@@ -115,17 +115,17 @@ lang_dict={
             'cocktail_type_message_HEB':"נשמח להציע לך  את סוגי המשקאות הבאים:",
             'cocktail_type_message_RUS':"Рады предложить вам следующие виды напитков:",
             
-            'empty_card_ENG':"The card is empty, let's choose your cocktails: /start",
-            'empty_card_HEB':'הסל ריק, הגיע הזמן לבחור משהו',
-            'empty_card_RUS':'Корзина пуста, самое время что-нибуть выбрать: /start',
+            'empty_card_ENG':"The card is empty, let's choose your cocktails: /menu",
+            'empty_card_HEB':'הסל ריק, הגיע הזמן לבחור משהו   /menu',
+            'empty_card_RUS':'Корзина пуста, самое время что-нибуть выбрать: /menu',
 
             'add_info_ENG':'Add personal info',
             'add_info_HEB':'נתחיל את ההזמנה',
             'add_info_RUS':'Оформляем заказ',
 
-            'empty_orders_ENG':"You have no orders yet, it's time to order your first cocktail🍸 press /start",
-            'empty_orders_HEB':' אין לך הזמנות,זה הזמן לעשות את ההזמנה הראשונה שלך🍸 תבחר בתפריט למטה או תלחץ כאן /start',
-            'empty_orders_RUS':'У вас пока нет закзав, самое время сделать ваш первый🍸 выберете меню внизу или нажмите /start',
+            'empty_orders_ENG':"You have no orders yet, it's time to order your first cocktail🍸 press /menu",
+            'empty_orders_HEB':' אין לך הזמנות,זה הזמן לעשות את ההזמנה הראשונה שלך🍸 תבחר בתפריט למטה או תלחץ כאן /menu',
+            'empty_orders_RUS':'У вас пока нет закзав, самое время сделать ваш первый🍸 выберете меню внизу или нажмите /menu',
 
             'empty_card_call_ENG':"The card is empty, let's choose your cocktails.",
             'empty_card_call_HEB':'הסל ריק, הגיע הזמן לבחור משהו.',
@@ -147,17 +147,17 @@ lang_dict={
             'info_HEB':'אנחנו צוות של ברמנים מקצועיים, אנו מכינים משקאות קלאסיים ומקוריים למצב הרוח שלכם!\nליצירת קשר:\n[Facebook](https://www.facebook.com/coctailexpresstlv)\n[Instagram](https://www.instagram.com/cocktailexpresstlv)\nטלפון: 053-306-7303',
             'info_RUS':'Мы команда профессиональных барменов, готовим классические, и оригинальные напитки для вашего настроения.\n*Контакты:*\n[Facebook](https://www.facebook.com/coctailexpresstlv)\n[Instagram](https://www.instagram.com/cocktailexpresstlv)\nТелефон: 053-306-7303',
             
-            'ask_name_ENG':'What is your name?\nNow we know you as: ',
-            'ask_name_HEB':'איך קוראים לך?\nנקלט במערכת שם:  ',
-            'ask_name_RUS':'Как вас зовут?\nCейчас так: ',
+            'ask_name_ENG':'Enter your name.\nOr press the button "Correct" if your name is: ',
+            'ask_name_HEB':'הזן את שמך.\n או תלחץ "נכון" עם שמך הוא: ',
+            'ask_name_RUS':'Введите ваше имя.\nЛибо нажмите "Верно" если вас зовут: ',
      
-            'ask_phone_ENG':'Your phone number\nNow: ',
-            'ask_phone_HEB':'מה מספר הטלפון שלך?\nהמספר טלפון שלך עכשיו הוא: ',
-            'ask_phone_RUS':'Ваш телефон\nСейчас: ',
+            'ask_phone_ENG':'Enter your phone number.\nOr press the button "Correct" if your phone number is: ',
+            'ask_phone_HEB':'הזן מספר טלפון שלך.\nאו תלחץ "נכון" עם המספר טלפון שלך הוא: ',
+            'ask_phone_RUS':'Введите ваш номер телефона.\nЛибо нажмите "Верно" если ваш номер: ',
 
-            'ask_address_ENG':'Your address:\nNow: ',
-            'ask_address_HEB':'מה הכתובת שלך \nהכתובת שלך עכשיו היא:  ',
-            'ask_address_RUS':'Адрес:\nСейчас: ',
+            'ask_address_ENG':'Enter your address.\nOr press the button "Correct" if your address is:  ',
+            'ask_address_HEB':'הזן את הכתובת.\nאו תלחץ "נכון" עם הכתובת היא:  ',
+            'ask_address_RUS':'Введите ваш аддрес.\nЛибо нажмите "Верно" если ваш адрес: ',
 
             'back_to_card_ENG':'back to cart',
             'back_to_card_HEB':'חוזרים לסל קניות',
@@ -225,19 +225,19 @@ lang_dict={
             'sand_order_back_RUS':'⬅️Назад',
 #-------------------------------------------
             'trade_buy05_ENG':'🛍0.5L',
-            'trade_buy05_HEB':'0.5ל🛍',
+            'trade_buy05_HEB':'ל0.5🛍',
             'trade_buy05_RUS':'🛍0.5L',
 
             'trade_buy03_ENG':'🛍0.3L',
-            'trade_buy03_HEB':'0.3ל🛍',
+            'trade_buy03_HEB':'ל0.3🛍',
             'trade_buy03_RUS':'🛍0.3L',
 
             'trade_card_ENG':'🛒Go to Card',
             'trade_card_HEB':'לסל🛒',
             'trade_card_RUS':'🛒Перейти в корзину',
 
-            'trade_back_ENG':'◀️Back to menu',
-            'trade_back_HEB':'חזרה ל תפריט▶️',
+            'trade_back_ENG':'◀️Back',
+            'trade_back_HEB':'חזרה▶️',
             'trade_back_RUS':'⬅️Назад в меню',
 #-----------------------------basket---------------------------------------
             'basket_next_ENG':'next ▶️',
@@ -609,6 +609,12 @@ async def welcome (message):
     await bot.send_photo(message.chat.id, img, reply_markup=language_keyboard)  
     await init_customer_from_message(message)
 
+@client.message_handler(commands=['menu'])
+async def main_cocktail_menu(message):
+    temp_lang=users[f'{message.chat.id}_lang']
+    text=lang_dict[f'cocktail_type_message_{temp_lang}']
+    cocktailkeyboard=await cocktail_type_keyboard(lang=users[f'{message.chat.id}_lang'])
+    await bot.send_message(message.chat.id,text=text, reply_markup=cocktailkeyboard)
 #------------------comuticatiom by InlineKeyboard-----------------------------------------------------------------------------------\
 @client.callback_query_handler(lambda c: c.data)
 async def get_call (call: types.CallbackQuery):
@@ -625,7 +631,7 @@ async def get_call (call: types.CallbackQuery):
     if call.data=='HEB':
         mainkeyboard=await main_keyboard_down(lang='HEB')
         img_h=open('first_HEB.jpg','rb')
-        text="ברוכה הבאה לחנות הבוט CocktailExpress!\nאנחנו עושים משלוחים של קראפט קוקטיילים\nטריים ומרעננים עד עליך.\nמקבלים הזמנות כל יום עד השעה 17:00 ההזמנה תגיע\nבאותו היום בין השעות 20:00-23:00."
+        text="ברוכים הבאים לחנות הבוט CocktailExpress!\nאנחנו עושים משלוחים של קראפט קוקטיילים\nטריים ומרעננים עד אליך.\nמקבלים הזמנות כל יום עד השעה 17:00 ההזמנה תגיע\nבאותו היום בין השעות 20:00-23:00."
         await bot.send_photo(chat_id=call.message.chat.id, photo=img_h, caption=text, reply_markup=mainkeyboard)
         users[f'{call.message.chat.id}_lang']='HEB'
 
@@ -1125,3 +1131,4 @@ async def get_photo(message):
 
 executor.start_polling(client)
  
+# if __name__ =="__main__":
