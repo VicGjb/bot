@@ -155,9 +155,9 @@ lang_dict={
             'ask_phone_HEB':'הזן מספר טלפון שלך.\nאו תלחץ "נכון" עם המספר טלפון שלך הוא: ',
             'ask_phone_RUS':'Введите ваш номер телефона.\nЛибо нажмите "Верно" если ваш номер: ',
 
-            'ask_address_ENG':'Enter your address.\nOr press the button "Correct" if your address is:  ',
-            'ask_address_HEB':'הזן את הכתובת.\nאו תלחץ "נכון" עם הכתובת היא:  ',
-            'ask_address_RUS':'Введите ваш аддрес.\nЛибо нажмите "Верно" если ваш адрес: ',
+            'ask_address_ENG':'*!!!!! Delivery in Tel Aviv-Jaffa, Ramat-Gan, Givatayim !!!*\n\nEnter your address.\nOr press the button "Correct" if your address is:  ',
+            'ask_address_HEB':'*!!! משלוחים לתל אביב יפו, רמת גן וגבעתיים!!!*\n\nהזן את הכתובת.\nאו תלחץ "נכון" עם הכתובת היא:  ',
+            'ask_address_RUS':'*!!!Доставки по Тель-Авив-Яффо, Рамат-Ган, Гиватаим!!!*\n\nВведите ваш аддрес.\nЛибо нажмите "Верно" если ваш адрес: ',
 
             'back_to_card_ENG':'back to cart',
             'back_to_card_HEB':'חוזרים לסל קניות',
@@ -622,8 +622,9 @@ async def get_call (call: types.CallbackQuery):
     if call.data=='ENG':
         mainkeyboard=await main_keyboard_down(lang='ENG')
         img_e=open('first_ENG.jpg','rb')
-        text="Welcome to the bot of CocktailExpress shop!\nWe're delivering craft cocktails to your homes.\nThe orders are taken every day till 17:00.\nDelivery will be made the same day from 20:00 to 23:00."
-        await bot.send_photo(chat_id=call.message.chat.id, photo=img_e, caption=text, reply_markup=mainkeyboard)
+        text="Welcome to the bot of CocktailExpress shop!\nWe're delivering craft cocktails to your homes.\nThe orders are taken every day till 17:00.\
+            \nDelivery will be made the same day from 20:00 to 23:00.\n\n*!!!!! Delivery in Tel Aviv-Jaffa, Ramat-Gan, Givatayim !!!*"
+        await bot.send_photo(chat_id=call.message.chat.id, photo=img_e, caption=text, reply_markup=mainkeyboard, parse_mode="Markdown")
         # await bot.send_message(chat_id=call.message.chat.id,reply_markup=mainkeyboard,
         #                     text="Welcome to the bot of CocktailExpress shop!\nWe're delivering craft cocktails to your homes.\nThe orders are taken every day till 17:00.\nDelivery will be made the same day from 20:00 to 23:00.")
         users[f'{call.message.chat.id}_lang']='ENG'
@@ -631,15 +632,16 @@ async def get_call (call: types.CallbackQuery):
     if call.data=='HEB':
         mainkeyboard=await main_keyboard_down(lang='HEB')
         img_h=open('first_HEB.jpg','rb')
-        text="ברוכים הבאים לחנות הבוט CocktailExpress!\nאנחנו עושים משלוחים של קראפט קוקטיילים\nטריים ומרעננים עד אליך.\nמקבלים הזמנות כל יום עד השעה 17:00 ההזמנה תגיע\nבאותו היום בין השעות 20:00-23:00."
-        await bot.send_photo(chat_id=call.message.chat.id, photo=img_h, caption=text, reply_markup=mainkeyboard)
+        text="ברוכים הבאים לחנות הבוט CocktailExpress!\nאנחנו עושים משלוחים של קראפט קוקטיילים\nטריים ומרעננים עד אליך.\nמקבלים הזמנות כל יום עד השעה 17:00 ההזמנה תגיע\nבאותו היום בין השעות 20:00-23:00.\n\n*!!! משלוחים לתל אביב יפו, רמת גן וגבעתיים!!!*"
+        await bot.send_photo(chat_id=call.message.chat.id, photo=img_h, caption=text, reply_markup=mainkeyboard, parse_mode="Markdown")
         users[f'{call.message.chat.id}_lang']='HEB'
 
     if call.data=='RUS':
         mainkeyboard=await main_keyboard_down(lang='RUS')
         img_r=open('first_RUS.jpg','rb')
-        text="Вас приветсвует бот-магазин CocktailExpress!\nМы достовляем к вам свежие, крафтовые коктейли.\nЗаказы принимаеются каждый день до 17:00.\nДоставляем в тот же день с 20:00 до 23:00."
-        await bot.send_photo(chat_id=call.message.chat.id, photo=img_r, caption=text, reply_markup=mainkeyboard)
+        text="Вас приветсвует бот-магазин CocktailExpress!\nМы достовляем к вам свежие, крафтовые коктейли.\nЗаказы принимаеются каждый день до 17:00.\
+            \nДоставляем в тот же день с 20:00 до 23:00.\n\n*!!!Доставки по Тель-Авив-Яффо, Рамат-Ган, Гиватаим!!!*"
+        await bot.send_photo(chat_id=call.message.chat.id, photo=img_r, caption=text, reply_markup=mainkeyboard, parse_mode="Markdown")
         users[f'{call.message.chat.id}_lang']='RUS'
 #------------------------------------------------------------------------------------------------------------------
 
@@ -929,7 +931,7 @@ async def get_phone (message, state:FSMContext):
 
                 addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
                 keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
-                await bot.send_message(message.chat.id, text=lang_dict[f'ask_address_{temp_lang}']+f'{addres}',reply_markup=keyboard_order)
+                await bot.send_message(message.chat.id, text=lang_dict[f'ask_address_{temp_lang}']+f'{addres}',reply_markup=keyboard_order, parse_mode="Markdown")
                 await MakeOrder.get_addres.set()
             else:
                 await bot.send_message(message.chat.id, text=lang_dict[f'non_phone_{temp_lang}'])
@@ -966,7 +968,7 @@ async def get_phone (message, state:FSMContext):
 
                 addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
                 keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
-                await bot.send_message(message.chat.id, text=lang_dict[f'ask_address_{temp_lang}']+f'{addres}',reply_markup=keyboard_order)
+                await bot.send_message(message.chat.id, text=lang_dict[f'ask_address_{temp_lang}']+f'{addres}',reply_markup=keyboard_order, parse_mode="Markdown")
                 await MakeOrder.get_addres.set()             
             else:
                 await bot.send_message(message.chat.id, text=lang_dict[f'non_phone_{temp_lang}'])
@@ -1092,7 +1094,7 @@ async def send_order(message, state:FSMContext):
         elif message.text == '⬅️Back' or message.text=='⬅️Назад' or message.text=='חזרה⬅️':
             addres=users[f'{message.chat.id}_person'].columns['addres'][f'{message.chat.id}']
             keyboard_order=await keyboard_for_order(lang=users[f'{message.chat.id}_lang'])
-            await bot.send_message(message.chat.id, text=lang_dict[f'ask_address_{temp_lang}']+f'{addres}',reply_markup=keyboard_order)
+            await bot.send_message(message.chat.id, text=lang_dict[f'ask_address_{temp_lang}']+f'{addres}',reply_markup=keyboard_order, parse_mode="Markdown")
             await MakeOrder.get_addres.set()
 
 
