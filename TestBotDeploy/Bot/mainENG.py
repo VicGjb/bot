@@ -207,9 +207,9 @@ lang_dict={
             'tnx_HEB':'תודה על הזמנתך\nהזמנה תגיעי היום בין השעות 20:00-23:00',
             'tnx_RUS':'Спасибо за заказ!\nДоставим сегодня вечером с 20:00 до 23:00',
 
-            'tnx_next_day_ENG':'Thank you for your order!\nThe package will be delivered tomorrow from 20:00 to 23:00',
-            'tnx_next_day_HEB':'תודה על הזמנתך\nהזמנה תגיעי מחר בין השעות 20:00-23:00',
-            'tnx_next_day_RUS':'Спасибо за заказ!\nДоставим завтра вечером с 20:00 до 23:00',
+            'tnx_next_day_ENG':'Thank you for your order!\nThe package will be delivered *tomorrow* from 20:00 to 23:00',
+            'tnx_next_day_HEB':'תודה על הזמנתך\nהזמנה תגיעי *מחר* בין השעות 20:00-23:00',
+            'tnx_next_day_RUS':'Спасибо за заказ!\nДоставим *завтра* вечером с 20:00 до 23:00',
 
             'added_in_card_ENG':' is in the card',
             'added_in_card_HEB':'  הוסף לסל',
@@ -1114,7 +1114,7 @@ async def send_order(message, state:FSMContext):
 
             now_time=int(datetime.datetime.now().strftime("%H"))
             if now_time > time_to_close:
-                await bot.send_message (message.chat.id, text=lang_dict[f'tnx_next_day_{temp_lang}'], reply_markup=mainkeyboard)
+                await bot.send_message (message.chat.id, text=lang_dict[f'tnx_next_day_{temp_lang}'], reply_markup=mainkeyboard, parse_mode="Markdown")
             else:    
                 await bot.send_message(message.chat.id, text=lang_dict[f'tnx_{temp_lang}'], reply_markup=mainkeyboard)
             await bot.send_message(197634497, text=f'новый заказ:\n{text}\nзаказали\n{order}')
