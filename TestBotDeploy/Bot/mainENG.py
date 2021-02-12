@@ -79,7 +79,7 @@ for order in temp_all_orders:
     all_orders.rows.append(order,header=f'{order[0]}')
 
 global time_to_close
-time_to_close = 16
+time_to_close = 14
 
 url_types={
            'Signature Cocktails':'https://github.com/VicGjb/testbot/blob/main/sing_ENG.jpg?raw=true',
