@@ -10,6 +10,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 import time
+import datetime
 
 from base import up_cocktail
 from base import init_user
@@ -77,6 +78,9 @@ all_orders.columns.header=['user_id','time','order']
 for order in temp_all_orders:
     all_orders.rows.append(order,header=f'{order[0]}')
 
+global time_to_close
+time_to_close = 16
+
 url_types={
            'Signature Cocktails':'https://github.com/VicGjb/testbot/blob/main/sing_ENG.jpg?raw=true',
            'Classic Coktails':'https://github.com/VicGjb/testbot/blob/main/classic_ENG.jpg?raw=true',
@@ -114,7 +118,11 @@ lang_dict={
             'cocktail_type_message_ENG':"We're happy to offer you this cocktails:",
             'cocktail_type_message_HEB':"נשמח להציע לך  את סוגי המשקאות הבאים:",
             'cocktail_type_message_RUS':"Рады предложить вам следующие виды напитков:",
-            
+
+            'payment_ENG':'On the moment we can suggest these paying methods:\n1. By cash in the moment of delivery.\n2. By BIT system 0533067303.',
+            'payment_HEB':'ברגע זה אנו יכולים להציע לך שתי יישומים\n1.תשלום במזומן לשליח \n2.תשלום דרך העברה ב ביט: 0533067303',
+            'payment_RUS':'На данный моменты мы можем предложить вам два сопособа оплаты:\n1)Наличными при получении.\n2)Перевод через систему BIT: 0533067303.',
+
             'empty_card_ENG':"The card is empty, let's choose your cocktails: /menu",
             'empty_card_HEB':'הסל ריק, הגיע הזמן לבחור משהו   /menu',
             'empty_card_RUS':'Корзина пуста, самое время что-нибуть выбрать: /menu',
@@ -198,6 +206,10 @@ lang_dict={
             'tnx_ENG':'Thank you for your order!\nThe package will be delivered today from 20:00 to 23:00',
             'tnx_HEB':'תודה על הזמנתך\nהזמנה תגיעי היום בין השעות 20:00-23:00',
             'tnx_RUS':'Спасибо за заказ!\nДоставим сегодня вечером с 20:00 до 23:00',
+
+            'tnx_next_day_ENG':'Thank you for your order!\nThe package will be delivered tomorrow from 20:00 to 23:00',
+            'tnx_next_day_HEB':'תודה על הזמנתך\nהזמנה תגיעי מחר בין השעות 20:00-23:00',
+            'tnx_next_day_RUS':'Спасибо за заказ!\nДоставим завтра вечером с 20:00 до 23:00',
 
             'added_in_card_ENG':' is in the card',
             'added_in_card_HEB':'  הוסף לסל',
@@ -292,8 +304,10 @@ async def main_keyboard_down(lang):
         basketbutton = types.KeyboardButton('🛒Card🛒')
         aboutus = types.KeyboardButton('💁🏻‍♀️Info💁🏻‍♀️')
         orders = types.KeyboardButton('🧳Orders🧳')
+        payment = types.KeyboardButton('💰Payment options💰') 
         language_button=types.KeyboardButton('Change language 🇮🇱 🇬🇧 🇷🇺')
-        mainkeyboard.add(menubutton, basketbutton, aboutus, orders, language_button)
+        mainkeyboard.add(menubutton, basketbutton, aboutus, orders, language_button, payment)
+        #mainkeyboard.row(language_button)
         return mainkeyboard
     if lang=='RUS':
         mainkeyboard=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -301,8 +315,10 @@ async def main_keyboard_down(lang):
         basketbutton = types.KeyboardButton('🛒Корзина🛒')
         aboutus = types.KeyboardButton('💁🏻‍♀️Контакты💁🏻‍♀️')
         orders = types.KeyboardButton('🧳Заказы🧳')
+        payment = types.KeyboardButton('💰Способы оплаты💰') 
         language_button=types.KeyboardButton('Поменять язык 🇮🇱 🇬🇧 🇷🇺')
-        mainkeyboard.add(menubutton, basketbutton, aboutus, orders, language_button)
+        mainkeyboard.add(menubutton, basketbutton, aboutus, orders,language_button, payment)
+       # mainkeyboard.row(language_button)
         return mainkeyboard
     if lang == 'HEB':
         mainkeyboard=types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
@@ -310,8 +326,10 @@ async def main_keyboard_down(lang):
         basketbutton = types.KeyboardButton('🛒סל קניות🛒')
         aboutus = types.KeyboardButton('💁🏻‍♀️עלינו💁🏻‍♀️')
         orders = types.KeyboardButton('🧳הזמנות🧳')
+        payment = types.KeyboardButton('💰דרכי תשלום💰') 
         language_button=types.KeyboardButton('🇮🇱 🇬🇧 🇷🇺 שנה שפה')
-        mainkeyboard.add(basketbutton, menubutton, orders, aboutus, language_button)
+        mainkeyboard.add(menubutton, basketbutton, aboutus, orders, language_button, payment)
+       # mainkeyboard.row(language_button)
         return mainkeyboard
 
 #coctailmenu
@@ -434,7 +452,8 @@ async  def show_cocktail(call,tip):
                     price05=cocktail['price05']
                     price03=cocktail['price03']
                     trade_keyboard= await keyboard(price05, price03, cocktail_name, tip=tip, lang=users[f'{call.message.chat.id}_lang'])
-                    await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=text, reply_markup=trade_keyboard,parse_mode='Markdown') 
+                    await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,\
+                                                     text=text, reply_markup=trade_keyboard,parse_mode='Markdown') 
     except KeyError:
         print('!!!!!!!!!!!!!!!!!!!!!Im in show cocktail!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1')
         
@@ -456,11 +475,13 @@ async def cocktail_size(tip,call):
                             users[f'{call.message.chat.id}_basket'].rows[name_h]['amount']+=1
                             users[f'{call.message.chat.id}_basket'].rows[name_h]['price']+=price_h
                             temp_lang=users[f'{call.message.chat.id}_lang']
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}']) 
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, \
+                                                            text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}']) 
                         else:
                             temp_lang=users[f'{call.message.chat.id}_lang']          
                             users[f'{call.message.chat.id}_basket'].rows.append([name_h,cocktail_photo,1,price_h],header=name_h)
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}'])      
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,\
+                                                             text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}'])      
                     except AttributeError:
                         print('!!!!!!!!AtE cocktail size!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
                         await oops_message(chat_id=call.message.chat.id)
@@ -473,11 +494,13 @@ async def cocktail_size(tip,call):
                             users[f'{call.message.chat.id}_basket'].rows[name_t]['amount']+=1
                             users[f'{call.message.chat.id}_basket'].rows[name_t]['price']+=price_t
                             temp_lang=users[f'{call.message.chat.id}_lang']
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}']) 
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,\
+                                                            text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}']) 
                         else:
                             temp_lang=users[f'{call.message.chat.id}_lang']        
                             users[f'{call.message.chat.id}_basket'].rows.append([name_t,cocktail_photo,1,price_t],header=name_t)
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}']) 
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,\
+                                                             text=f'{cocktail_name}'+lang_dict[f'added_in_card_{temp_lang}']) 
                     except AttributeError:
                         print('atribute error in cocktail size')
                         await oops_message(chat_id=call.message.chat.id)
@@ -487,7 +510,7 @@ async def cocktail_size(tip,call):
     except KeyError:
         print('Im iin coktail size key err last one')
         await oops_message(chat_id=call.message.chat.id)
-#------------------------------funtion for operation with card--------------------------------------------------------\
+#------------------------------funtion for operation with cart--------------------------------------------------------\
 #keyboard for basket
 async def basket_test(count_items,showitem,total,item_price,total_item,lang):
 
@@ -527,7 +550,8 @@ async def basket_from_message (n, message, lang):
     text=f'*{name}*[_]({bas_url})'  
     item_price=users[f'{message.chat.id}_basket'].rows[item]['price']/count_items
     total_item = count_items*item_price
-    basket_keyboard= await basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item, lang=lang)
+    basket_keyboard= await basket_test(count_items=count_items,showitem=showitem,total=total,\
+                                        item_price=item_price,total_item=total_item, lang=lang)
     await bot.send_message(message.chat.id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
    
 #show basket from inlain keyboard
@@ -541,8 +565,10 @@ async def basket_from_call(n, item, call, lang):
     text=f'*{name}*[_]({bas_url})' 
     item_price=users[f'{call.message.chat.id}_basket'].rows[item]['price']/count_items
     total_item = count_items*item_price
-    basket_keyboard=await basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item, lang=lang)
-    await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
+    basket_keyboard=await basket_test(count_items=count_items,showitem=showitem,total=total,\
+                                        item_price=item_price,total_item=total_item, lang=lang)
+    await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,\
+                                text= text,reply_markup=basket_keyboard, parse_mode='Markdown')
 
 async def basket_iter(n,call,lang):
     basketC=f'{call.message.chat.id}_basket'
@@ -557,9 +583,11 @@ async def basket_iter(n,call,lang):
     text=f'{name} [_]({bas_url})'
     item_price=users[f'{call.message.chat.id}_basket'].rows[item]['price']/count_items
     total_item = count_items*item_price
-    basket_keyboard=await basket_test(count_items=count_items,showitem=showitem,total=total,item_price=item_price,total_item=total_item,lang=lang)
+    basket_keyboard=await basket_test(count_items=count_items,showitem=showitem,total=total,\
+                                        item_price=item_price,total_item=total_item,lang=lang)
     
-    return await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,reply_markup=basket_keyboard,text=text, parse_mode='Markdown')
+    return await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,\
+                                        reply_markup=basket_keyboard,text=text, parse_mode='Markdown')
 
 #--------------Functions for custumer initialization---------------------------------------------------------------------------------------\
 async def init_customer_from_message(message):
@@ -632,7 +660,8 @@ async def get_call (call: types.CallbackQuery):
     if call.data=='HEB':
         mainkeyboard=await main_keyboard_down(lang='HEB')
         img_h=open('first_HEB.jpg','rb')
-        text="ברוכים הבאים לחנות הבוט CocktailExpress!\nאנחנו עושים משלוחים של קראפט קוקטיילים\nטריים ומרעננים עד אליך.\nמקבלים הזמנות כל יום עד השעה 17:00 ההזמנה תגיע\nבאותו היום בין השעות 20:00-23:00.\n\n*!!! משלוחים לתל אביב יפו, רמת גן וגבעתיים!!!*"
+        text="ברוכים הבאים לחנות הבוט CocktailExpress!\nאנחנו עושים משלוחים של קראפט קוקטיילים\nטריים ומרעננים עד אליך.\
+            \nמקבלים הזמנות כל יום עד השעה 17:00 ההזמנה תגיע\nבאותו היום בין השעות 20:00-23:00.\n\n*!!! משלוחים לתל אביב יפו, רמת גן וגבעתיים!!!*"
         await bot.send_photo(chat_id=call.message.chat.id, photo=img_h, caption=text, reply_markup=mainkeyboard, parse_mode="Markdown")
         users[f'{call.message.chat.id}_lang']='HEB'
 
@@ -854,8 +883,12 @@ async def get_text(message):
         logo=open('logo.jpg','rb')        
         await bot.send_photo(message.chat.id, logo, reply_markup=language_keyboard)
 
-
-
+    elif message.text=='💰Payment options💰' or message.text=='💰Способы оплаты💰' or message.text=='💰דרכי תשלום💰':
+        try:
+            await bot.send_message(message.chat.id, text=lang_dict[f'payment_{temp_lang}'])
+        except KeyError:
+            print('KeyError in about payments')
+            await oops_message(chat_id=message.chat.id)
     else:
         try:
             mainkeyboard=await main_keyboard_down(lang=temp_lang)
@@ -1077,7 +1110,13 @@ async def send_order(message, state:FSMContext):
             total=(sum(list(order.columns['Price'])))
             text=lang_dict[f'send_order_name_{temp_lang}']+f'{name}'+lang_dict[f'send_order_phone_{temp_lang}']+f'{phone}'+lang_dict[f'send_order_address_{temp_lang}']+f'{addres}'+lang_dict[f'send_order_total_{temp_lang}']+f'{total}'
             mainkeyboard=await main_keyboard_down(lang=users[f'{message.chat.id}_lang'])
-            await bot.send_message(message.chat.id, text=lang_dict[f'tnx_{temp_lang}'], reply_markup=mainkeyboard)
+            await bot.send_message(message.chat.id, text=lang_dict[f'payment_{temp_lang}'])
+
+            now_time=int(datetime.datetime.now().strftime("%H"))
+            if now_time > time_to_close:
+                await bot.send_message (message.chat.id, text=lang_dict[f'tnx_next_day_{temp_lang}'], reply_markup=mainkeyboard)
+            else:    
+                await bot.send_message(message.chat.id, text=lang_dict[f'tnx_{temp_lang}'], reply_markup=mainkeyboard)
             await bot.send_message(197634497, text=f'новый заказ:\n{text}\nзаказали\n{order}')
           
             print('im finish!!!!!!!!!!!!!!')
@@ -1086,7 +1125,7 @@ async def send_order(message, state:FSMContext):
             add_ord(conn='', user_id=message.chat.id, zakaz=text)
             person.rows[f'{message.chat.id}']=(message.chat.id, name, phone, addres, text)
             tm=time.ctime(time.time())
-            all_orders.rows.insert(0,[message.chat.id, tm, text],header=f'{message.chat.id}')
+            all_orders.rows.insert(0,[message.chat.id, tm, text], header=f'{message.chat.id}')
             await init_customer_from_message(message)
         
             print('Now im realy finish!!!!!!')
