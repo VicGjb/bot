@@ -102,7 +102,7 @@ def init_db_cocktail (conn, force:bool=False):
                 price03         REAL  NOT NULL   
                 )
             """)
-       cocktails=[
+    cocktails=[
         ('1','Signature Cocktails','Forks Of Flame','https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/127178575_167561488434254_7863771113045448844_o.jpg?_nc_cat=102&ccb=2&_nc_sid=0debeb&_nc_ohc=LJsBI9AdBFMAX9AdqO7&_nc_ht=scontent.ftlv1-1.fna&oh=b7f1ed3c3ce405dcee191f981fd40232&oe=5FFBF7D3',
         'Basil flavored, spicy herbal refreshing drink on tequila.\n\nTequila\nBasil\nJalapenon\nLemon juice\nCardamon syrup\nGinger syrup','129','78'),
         ('2','Signature Cocktails','From Madrid to Mexico','https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/127090082_167561438434259_3305127272068609117_o.jpg?_nc_cat=100&ccb=2&_nc_sid=0debeb&_nc_ohc=ajz8CmsIZCgAX_YNnTm&_nc_ht=scontent.ftlv1-1.fna&oh=8ab7a0439314b390848314c6f9920b7a&oe=5FFCF111',
