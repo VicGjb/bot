@@ -82,29 +82,29 @@ global time_to_close
 time_to_close = 14
 
 url_types={
-           'Signature Cocktails':'https://github.com/VicGjb/testbot/blob/main/sing_ENG.jpg?raw=true',
-           'Classic Coktails':'https://github.com/VicGjb/testbot/blob/main/classic_ENG.jpg?raw=true',
-           'Gin&Tonic':'https://github.com/VicGjb/testbot/blob/main/g&t_ENG.jpg?raw=true',
-           'Spritz':'https://github.com/VicGjb/testbot/blob/main/Aperol_ENG.jpg?raw=true',
-           'Negronis':'https://github.com/VicGjb/testbot/blob/main/negroni_ENG.jpg?raw=true',
+           'Signature Cocktails':'https://github.com/VicGjb/testbot/blob/main/sing_ENG.jpg?raw=true,a=TIMESTAMP',
+           'Classic Coktails':'https://github.com/VicGjb/testbot/blob/main/classic_ENG.jpg?raw=true,a=TIMESTAMP',
+           'Gin&Tonic':'https://github.com/VicGjb/testbot/blob/main/g&t_ENG.jpg?raw=true,a=TIMESTAMP',
+           'Spritz':'https://github.com/VicGjb/testbot/blob/main/Aperol_ENG.jpg?raw=true,a=TIMESTAMP',
+           'Negronis':'https://github.com/VicGjb/testbot/blob/main/negroni_ENG.jpg?raw=true,a=TIMESTAMP',
            
-           'Авторские коктейли':'https://github.com/VicGjb/testbot/blob/main/sign_RUS.jpg?raw=true',
-           'Классические коктейли':'https://github.com/VicGjb/testbot/blob/main/classic_RUS.jpg?raw=true',
-           'Джин и тоник':'https://github.com/VicGjb/testbot/blob/main/g&t_RUS.jpg?raw=true',
-           'Апероль спритц твисты':'https://github.com/VicGjb/testbot/blob/main/aperol_RUS.jpg?raw=true',
-           'Негрони твисты':'https://github.com/VicGjb/testbot/blob/main/negroni_RUS.jpg?raw=true',
+           'Авторские коктейли':'https://github.com/VicGjb/testbot/blob/main/sign_RUS.jpg?raw=true,a=TIMESTAMP',
+           'Классические коктейли':'https://github.com/VicGjb/testbot/blob/main/classic_RUS.jpg?raw=true,a=TIMESTAMP',
+           'Джин и тоник':'https://github.com/VicGjb/testbot/blob/main/g&t_RUS.jpg?raw=true,a=TIMESTAMP',
+           'Апероль спритц твисты':'https://github.com/VicGjb/testbot/blob/main/aperol_RUS.jpg?raw=true,a=TIMESTAMP',
+           'Негрони твисты':'https://github.com/VicGjb/testbot/blob/main/negroni_RUS.jpg?raw=true,a=TIMESTAMP',
            
-           'קוקטיילים הבית':'https://github.com/VicGjb/testbot/blob/main/sing_HEB.jpg?raw=true',
-           'קוקטיילים קלאסיים':'https://github.com/VicGjb/testbot/blob/main/classic_HEB.jpg?raw=true',
+           'קוקטיילים הבית':'https://github.com/VicGjb/testbot/blob/main/sing_HEB.jpg?raw=true,a=TIMESTAMP',
+           'קוקטיילים קלאסיים':'https://github.com/VicGjb/testbot/blob/main/classic_HEB.jpg?raw=true,a=TIMESTAMP',
            "ג'ין וטוניק":'https://github.com/VicGjb/testbot/blob/main/g&t_HEB.jpg?raw=true',
-           'אפרול שפריץ טוויסת':'https://github.com/VicGjb/testbot/blob/main/aperol_HEBjpg.jpg?raw=true',
-           'נגרוני טוויסת':'https://github.com/VicGjb/testbot/blob/main/negroni_HEB.jpg?raw=true',
+           'אפרול שפריץ טוויסת':'https://github.com/VicGjb/testbot/blob/main/aperol_HEBjpg.jpg?raw=true,a=TIMESTAMP',
+           'נגרוני טוויסת':'https://github.com/VicGjb/testbot/blob/main/negroni_HEB.jpg?raw=true,a=TIMESTAMP',
 
-           'logo':'https://github.com/VicGjb/testbot/blob/main/LOGO%20MADE%20BY%20TEL.jpg?raw=true',
+           'logo':'https://github.com/VicGjb/testbot/blob/main/LOGO%20MADE%20BY%20TEL.jpg?raw=true,a=TIMESTAMP',
            
-           'down_keyboard_ENG':'https://github.com/VicGjb/testbot/blob/main/down_keyboard_ENG.jpg?raw=true',
-           'down_keyboard_HEB':'https://github.com/VicGjb/testbot/blob/main/down_keyboard_HEB.jpg?raw=true',
-           'down_keyboard_RUS':'https://github.com/VicGjb/testbot/blob/main/down_keyboard_RUS.jpg?raw=true'
+           'down_keyboard_ENG':'https://github.com/VicGjb/testbot/blob/main/down_keyboard_ENG.jpg?raw=true,a=TIMESTAMP',
+           'down_keyboard_HEB':'https://github.com/VicGjb/testbot/blob/main/down_keyboard_HEB.jpg?raw=true,a=TIMESTAMP',
+           'down_keyboard_RUS':'https://github.com/VicGjb/testbot/blob/main/down_keyboard_RUS.jpg?raw=true,a=TIMESTAMP'
            
            }
 
