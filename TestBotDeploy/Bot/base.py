@@ -102,7 +102,7 @@ def init_db_cocktail (conn, force:bool=False):
                 price03         REAL  NOT NULL   
                 )
             """)
-    cocktails=[
+       cocktails=[
         ('1','Signature Cocktails','Forks Of Flame','https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/127178575_167561488434254_7863771113045448844_o.jpg?_nc_cat=102&ccb=2&_nc_sid=0debeb&_nc_ohc=LJsBI9AdBFMAX9AdqO7&_nc_ht=scontent.ftlv1-1.fna&oh=b7f1ed3c3ce405dcee191f981fd40232&oe=5FFBF7D3',
         'Basil flavored, spicy herbal refreshing drink on tequila.\n\nTequila\nBasil\nJalapenon\nLemon juice\nCardamon syrup\nGinger syrup','129','78'),
         ('2','Signature Cocktails','From Madrid to Mexico','https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.0-9/127090082_167561438434259_3305127272068609117_o.jpg?_nc_cat=100&ccb=2&_nc_sid=0debeb&_nc_ohc=ajz8CmsIZCgAX_YNnTm&_nc_ht=scontent.ftlv1-1.fna&oh=8ab7a0439314b390848314c6f9920b7a&oe=5FFCF111',
@@ -149,11 +149,11 @@ def init_db_cocktail (conn, force:bool=False):
 
 
         ('21','Negronis','Negroni','https://scontent.ftlv8-1.fna.fbcdn.net/v/t1.0-9/127042700_167562361767500_3009746689503111905_o.jpg?_nc_cat=107&ccb=2&_nc_sid=0debeb&_nc_ohc=JhlVHKDWtvYAX9lOIFv&_nc_ht=scontent.ftlv8-1.fna&oh=3f48be947c5fdea4978b9bee29f37d85&oe=6004C447',
-        'Classic, bitter-sweet and strong.\n\nGin\nRed vermouth\nCampari','129','78'),
+        'Classic, bitter-sweet and strong.\n\nGin\nRed vermouth\nCampari','140','86'),
         ('22','Negronis','Peach negroni','https://scontent.ftlv8-1.fna.fbcdn.net/v/t1.0-9/127042619_167566398433763_6362628151006800018_o.jpg?_nc_cat=110&ccb=2&_nc_sid=0debeb&_nc_ohc=vZvf_0F_acYAX9x_Lux&_nc_ht=scontent.ftlv8-1.fna&oh=93845c731bcfb8a31834f02bbbbd6096&oe=60079079',
-        'Bitter-sweet, strong with fruity aftertaste.\n\nPeach infused gin\nRed vermouth\nCampari','129','78'),
+        'Bitter-sweet, strong with fruity aftertaste.\n\nPeach infused gin\nRed vermouth\nCampari','140','86'),
         ('23','Negronis','White negroni','https://scontent.ftlv8-1.fna.fbcdn.net/v/t1.0-9/127021870_167566891767047_2595835501233676947_o.jpg?_nc_cat=103&ccb=2&_nc_sid=0debeb&_nc_ohc=E5M6_G9L7PsAX9xBLFq&_nc_ht=scontent.ftlv8-1.fna&oh=5a0ad18928e09b50afa8464f9250bd63&oe=6006DD79',
-        'Flowery-bitter, sweet and strong.\n\nGin\nSuze\nLillet blanc','129','78'),
+        'Flowery-bitter, sweet and strong.\n\nGin\nSuze\nLillet blanc','140','86'),
 
 
 
@@ -202,9 +202,9 @@ def init_db_cocktail (conn, force:bool=False):
         "מתובל פרחי והדרי, תוסס.\n\nאפרול\nפרוסקו\nמיץ תפוזים\nמי היביסקוס\n",'140','86'),
 
         ('45',"נגרוני טוויסת",'Negroni','https://scontent.ftlv8-1.fna.fbcdn.net/v/t1.0-9/127042700_167562361767500_3009746689503111905_o.jpg?_nc_cat=107&ccb=2&_nc_sid=0debeb&_nc_ohc=JhlVHKDWtvYAX9lOIFv&_nc_ht=scontent.ftlv8-1.fna&oh=3f48be947c5fdea4978b9bee29f37d85&oe=6004C447',
-        "טעם קלאסי, מר מתוק וחזק.\n\nג'ין\nקמפרי\nורמוט אדום\n",'129','78'),
+        "טעם קלאסי, מר מתוק וחזק.\n\nג'ין\nקמפרי\nורמוט אדום\n",'140','86'),
         ('46',"נגרוני טוויסת",'Peach negroni','https://scontent.ftlv8-1.fna.fbcdn.net/v/t1.0-9/127042619_167566398433763_6362628151006800018_o.jpg?_nc_cat=110&ccb=2&_nc_sid=0debeb&_nc_ohc=vZvf_0F_acYAX9x_Lux&_nc_ht=scontent.ftlv8-1.fna&oh=93845c731bcfb8a31834f02bbbbd6096&oe=60079079',
-        "מר וחזק עם טעם פירותי שאחרי.\n\nאינפוזיה ג'ין על אפרסק\nקמפרי\nורמוט אדום\n",'129','78'),
+        "מר וחזק עם טעם פירותי שאחרי.\n\nאינפוזיה ג'ין על אפרסק\nקמפרי\nורמוט אדום\n",'140','86'),
         ('47',"נגרוני טוויסת",'White negroni','https://scontent.ftlv8-1.fna.fbcdn.net/v/t1.0-9/127021870_167566891767047_2595835501233676947_o.jpg?_nc_cat=103&ccb=2&_nc_sid=0debeb&_nc_ohc=E5M6_G9L7PsAX9xBLFq&_nc_ht=scontent.ftlv8-1.fna&oh=5a0ad18928e09b50afa8464f9250bd63&oe=6006DD79',
         "טעם פרחי ומריר מתקתק וחזק.\n\nג'ין צרפתי\n\nסוז\nלילט\n",'140','86'),
 
@@ -256,11 +256,11 @@ def init_db_cocktail (conn, force:bool=False):
 
 
         ('67','Негрони твисты','Negroni','https://scontent.ftlv8-1.fna.fbcdn.net/v/t1.0-9/127042700_167562361767500_3009746689503111905_o.jpg?_nc_cat=107&ccb=2&_nc_sid=0debeb&_nc_ohc=JhlVHKDWtvYAX9lOIFv&_nc_ht=scontent.ftlv8-1.fna&oh=3f48be947c5fdea4978b9bee29f37d85&oe=6004C447',
-        'Классический, горько-сладкий и крепкий.\n\nДжин\nКампари\nКрасный вермут','129','78'),
+        'Классический, горько-сладкий и крепкий.\n\nДжин\nКампари\nКрасный вермут','140','86'),
         ('68','Негрони твисты','Peach negroni','https://scontent.ftlv8-1.fna.fbcdn.net/v/t1.0-9/127042619_167566398433763_6362628151006800018_o.jpg?_nc_cat=110&ccb=2&_nc_sid=0debeb&_nc_ohc=vZvf_0F_acYAX9x_Lux&_nc_ht=scontent.ftlv8-1.fna&oh=93845c731bcfb8a31834f02bbbbd6096&oe=60079079',
-        'Горький, крепкий, с фруктовым послевкусием.\n\nДжин настоянный на персиках\nКампари\n','129','78'),
+        'Горький, крепкий, с фруктовым послевкусием.\n\nДжин настоянный на персиках\nКампари\n','140','86'),
         ('69','Негрони твисты','White negroni','https://scontent.ftlv8-1.fna.fbcdn.net/v/t1.0-9/127021870_167566891767047_2595835501233676947_o.jpg?_nc_cat=103&ccb=2&_nc_sid=0debeb&_nc_ohc=E5M6_G9L7PsAX9xBLFq&_nc_ht=scontent.ftlv8-1.fna&oh=5a0ad18928e09b50afa8464f9250bd63&oe=6006DD79',
-        'Цветочно-горький, сладковатый и крепкий.\n\nФранцузкий джин\nСьюз\nЛилет бланк','129','78')
+        'Цветочно-горький, сладковатый и крепкий.\n\nФранцузкий джин\nСьюз\nЛилет бланк','140','86')
 
               ]
     c.executemany('INSERT INTO cocktails VALUES(%s,%s,%s,%s,%s,%s,%s)',cocktails)
